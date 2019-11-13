@@ -19,7 +19,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4391444194084904}
-  - component: {fileID: 114944844131011252}
   - component: {fileID: 58545212595797656}
   - component: {fileID: 61536603224218046}
   - component: {fileID: 96092349171072376}
@@ -405,9 +404,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   player1: 0
-  player11: 0
   player2: 1
-  player22: 0
   speed: 2200
   rb2d: {fileID: 0}
   man: {fileID: 0}
@@ -422,9 +419,7 @@ MonoBehaviour:
   player1Clone: {fileID: 0}
   player2Clone: {fileID: 0}
   spriteRender: {fileID: 0}
-  petalSpawner: {fileID: 0}
-  powerSpawner: {fileID: 0}
-  countdown: {fileID: 0}
+  trail: {fileID: 0}
 --- !u!114 &114743132520586254
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -437,9 +432,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   player1: 0
-  player11: 0
   player2: 1
-  player22: 0
   speed: 2200
   rb2d: {fileID: 0}
   man: {fileID: 0}
@@ -455,20 +448,7 @@ MonoBehaviour:
     type: 2}
   player2Clone: {fileID: 1292989438719264}
   spriteRender: {fileID: 0}
-  petalSpawner: {fileID: 0}
-  powerSpawner: {fileID: 0}
-  countdown: {fileID: 0}
---- !u!114 &114944844131011252
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1030710482415000}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6c9ce399126d8094d9f7e065b6c07267, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
+  trail: {fileID: 0}
 --- !u!212 &212198987696322116
 SpriteRenderer:
   m_ObjectHideFlags: 1

@@ -52,6 +52,7 @@ public class Player1 : MonoBehaviour
     private GameObject playerCopy;
 
     public SpriteRenderer spriteRender;
+    public TrailRenderer trail;
 
     //starVaribles
     private bool startOfGame = true;
@@ -231,14 +232,23 @@ public class Player1 : MonoBehaviour
         rb2d = GetComponent<Rigidbody2D>();
         man = GameObject.FindGameObjectWithTag("Manager").GetComponent<Manager>();
         spriteRender = this.GetComponent<SpriteRenderer>();
+        
         //add character selected
         if (player1)
         {
-            spriteRender.sprite = man.fishSprites[man.p1CharacterNum];
+            //normal sprite code
+            //spriteRender.sprite = man.fishSprites[man.p1CharacterNum];
+
+            //trail.materials[0] = man.fishMaterials[man.p1CharacterNum];
+            trail.sharedMaterial = man.fishMaterials[man.p1CharacterNum];
         }
         else
         {
-            spriteRender.sprite = man.fishSprites[man.p2CharacterNum];
+            //normal sprite code
+            //spriteRender.sprite = man.fishSprites[man.p2CharacterNum];
+
+            //trail.materials[0] = man.fishMaterials[man.p2CharacterNum];
+            trail.sharedMaterial = man.fishMaterials[man.p2CharacterNum];
         }
 
         if (man.gameModeBigFish)

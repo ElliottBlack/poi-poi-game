@@ -13,6 +13,7 @@ public class PatternSpawner : Spawner {
     /// </summary>
 
     private bool spawning = false;
+    private int spawnPatternIndex = 0;
 
     /*
 	// Use this for initialization
@@ -31,7 +32,29 @@ public class PatternSpawner : Spawner {
             {
                 frequency = Random.Range(startFrequency - 2f, startFrequency + 2f);
             }
-            SquarePattern();
+
+            spawnPatternIndex = Random.Range(0,5);
+            if (spawnPatternIndex == 0)
+            {
+                CrossPattern();
+            }
+            else if (spawnPatternIndex == 1)
+            {
+                RainPattern();
+            }
+            else if (spawnPatternIndex == 2)
+            {
+                CirclePattern();
+            }
+            else if (spawnPatternIndex == 3)
+            {
+                SnowFlakePattern();
+            }
+            else if (spawnPatternIndex == 4)
+            {
+                SquarePattern();
+            }
+
         }
         else 
         {

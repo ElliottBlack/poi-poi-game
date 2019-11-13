@@ -71,6 +71,7 @@ public class Manager : MonoBehaviour {
     public int p2CharacterNum = 1;
 
     public Sprite[] fishSprites;
+    public Material[] fishMaterials;
 
     public MenuManager mm;
 
