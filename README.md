@@ -26,8 +26,7 @@ GPU: Graphics card with DX10 (shader model 4.0) capabilities.
 
 ## Authors
 
-* **Billie Thompson** - *Initial work* - [PurpleBooth](https://github.com/PurpleBooth)
-
-See also the list of [contributors](https://github.com/your/project/contributors) who participated in this project.
+* **Elliott Black** - *Design and development* 
+* **Danielle Hofstetter** - *Art director* 
 
 
