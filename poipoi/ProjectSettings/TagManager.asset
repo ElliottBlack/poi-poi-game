@@ -16,6 +16,15 @@ TagManager:
   - Zone1
   - MenuManager
   - petalKiller
+  - Bubble
+  - DeathBall
+  - DeathWall
+  - TopWall
+  - SideWall
+  - GameManager
+  - LevelManager
+  - Peach
+  - Frog
   layers:
   - Default
   - TransparentFX
@@ -61,6 +70,15 @@ TagManager:
     locked: 0
   - name: petal
     uniqueID: 3817592125
+    locked: 0
+  - name: Lily Pads
+    uniqueID: 3395845951
+    locked: 0
+  - name: Frog
+    uniqueID: 1919258535
+    locked: 0
+  - name: Trees
+    uniqueID: 1995189555
     locked: 0
   - name: top
     uniqueID: 4139927419

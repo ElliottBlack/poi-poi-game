@@ -30,18 +30,6 @@ public class Spawner : MonoBehaviour {
 	void Start () {
         spawnerLocation = this.transform.localPosition;
 
-        /// use this code if you need some gamemodes with and without coll on petal
-        /// alternativley you could double the prefabs
-        if(man.gameModeAllYouCanEat)
-        {
-            disableColl = true;
-        }
-
-        if (powerUpSpawner && man.gameModeTooManyPowerUps && !winnersLvl)
-        {
-            frequency = 2f;
-            ranFreq = false;
-        }
 
         startFrequency = frequency;
 

@@ -14,6 +14,8 @@ public class PatternSpawner : Spawner {
 
     private bool spawning = false;
     private int spawnPatternIndex = 0;
+    private GameObject pet;
+    private Vector3 blobPos;
 
     /*
 	// Use this for initialization
@@ -34,6 +36,7 @@ public class PatternSpawner : Spawner {
             }
 
             spawnPatternIndex = Random.Range(0,5);
+            spawnPatternIndex = 5;
             if (spawnPatternIndex == 0)
             {
                 CrossPattern();
@@ -53,6 +56,10 @@ public class PatternSpawner : Spawner {
             else if (spawnPatternIndex == 4)
             {
                 SquarePattern();
+            }
+            else if (spawnPatternIndex == 5)
+            {
+                Blobs();
             }
 
         }
@@ -145,6 +152,22 @@ public class PatternSpawner : Spawner {
             Instantiate(spawn[Random.Range(0, spawn.Length)], new Vector3(spawnerLocation.x+i, spawnerLocation.y+40, 0), Quaternion.identity);
             Instantiate(spawn[Random.Range(0, spawn.Length)], new Vector3(spawnerLocation.x+20, spawnerLocation.y+i+20, 0), Quaternion.identity);
             Instantiate(spawn[Random.Range(0, spawn.Length)], new Vector3(spawnerLocation.x-20, spawnerLocation.y+i+20, 0), Quaternion.identity);
+        }
+
+        spawning = false;
+    }
+
+    private void Blobs()
+    {
+
+        float xPos = Random.Range(-spawnRange + spawnerLocation.x, spawnRange + spawnerLocation.x);
+        for (int i = 0; i < 60; i++)
+        {
+            //pet = Instantiate(spawn[Random.Range(0, spawn.Length)], new Vector3(Random.Range(xPos - 10f, xPos + 10f), Random.Range(spawnerLocation.y + 3f, spawnerLocation.y + 23f), 0), Quaternion.identity);
+            blobPos = Random.insideUnitCircle * 10;
+            blobPos = new Vector3(blobPos.x + xPos, blobPos.y + spawnerLocation.y + 5f, 0f);
+            pet = Instantiate(spawn[Random.Range(0, spawn.Length)], blobPos, Quaternion.identity);
+            pet.GetComponent<Orb>().randomSpeed = false;
         }
 
         spawning = false;

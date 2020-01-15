@@ -71,7 +71,7 @@ CircleCollider2D:
   m_GameObject: {fileID: 1358380483867186}
   m_Enabled: 1
   m_Density: 1
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 6200000, guid: b4019afccdbabed4e979f6580f5afebe, type: 2}
   m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
@@ -94,10 +94,6 @@ MonoBehaviour:
   powerUp: 0
   randomDir: 0
   downDir: 1
-  tadpole: {fileID: 0}
-  followTadpole: 0
-  followFish: 0
-  fishFace: {fileID: 0}
   stayPos: {x: 0, y: 0, z: 0}
   staying: 0
   spriteRender: {fileID: 0}

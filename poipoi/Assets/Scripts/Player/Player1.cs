@@ -70,9 +70,20 @@ public class Player1 : MonoBehaviour
     private Vector2 v; //velcoty vector
     private Vector2 r; //reflected vector
 
+    // bubble variables
+    public float bubbleSpeed = 10f;
+    public Rigidbody2D bubble;
+    public GameObject bubbleSpawner;
+    private Vector2 bubblePushDir;
+    public float bubbleForce = 10f;
+    private float bubblePushTime = 0f;
+    private bool bubblePushing = false;
+
 
     void OnCollisionEnter2D(Collision2D coll)
     {
+        // this needs to be made into a method also add else if instead of if
+        /*
         if(player1)
         {
             if (coll.gameObject.tag == "Player2")
@@ -164,14 +175,29 @@ public class Player1 : MonoBehaviour
 
         }
 
+
+        if (coll.gameObject.tag == "Wall" || coll.gameObject.tag == "DeathBall")
+        {
+            Instantiate(this.gameObject, startLoc, startRot);
+            Destroy(this.gameObject);
+        }
+        */
+
     }
 
     private void OnTriggerEnter2D(Collider2D coll)
     {
-        if (coll.gameObject.tag == "Wall")
+        if(coll.gameObject.tag == "DeathBall")
         {
             Instantiate(this.gameObject, startLoc, startRot);
             Destroy(this.gameObject);
+        }
+        if (coll.gameObject.tag == "Wall")
+        {
+            //GameObject newFish = Instantiate(this.gameObject, Vector3.zero, startRot);
+            //newFish.GetComponent<Player1>().startOfGame = false;
+
+            //Destroy(this.gameObject);
         }
 
         // cuplicated code from collision take one out or create method
@@ -287,6 +313,15 @@ public class Player1 : MonoBehaviour
 
         Movement();
 
+        //add both keys for both players
+        if (player1 && Input.GetButtonDown("Vertical"))
+        {
+           // FireBubble();
+        }
+        else if (player2 && Input.GetButtonDown("Vertical2"))
+        {
+          //  FireBubble();
+        }
     }
 
     void HitPlayer()
@@ -465,4 +500,13 @@ public class Player1 : MonoBehaviour
         //Call the AddForce function of our Rigidbody2D rb2d supplying movement multiplied by speed to move our player.
         rb2d.AddForce(movement * speed);
     }
+
+    void FireBubble()
+    {
+        //bubbleSpawnPosition = this.transform.position + this.transform.forward * 30f;
+        Rigidbody2D bubbleClone = (Rigidbody2D) Instantiate(bubble, bubbleSpawner.transform.position, transform.rotation);
+        //bubbleClone.velocity = transform.forward * bubbleSpeed;
+        bubbleClone.AddForce(bubbleSpeed * this.transform.right);
+    }
+
 }

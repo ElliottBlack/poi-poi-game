@@ -14,8 +14,8 @@ public class CountDown : MonoBehaviour
     void Start()
     {
         countdown = this.GetComponent<TextMeshProUGUI>();
-        petalSpawner.SetActive(false);
-        powerSpawner.SetActive(false);
+        //petalSpawner.SetActive(false);
+        //powerSpawner.SetActive(false);
     }
 
     // Update is called once per frame
@@ -26,8 +26,8 @@ public class CountDown : MonoBehaviour
         countdown.text = Mathf.Ceil(5 - startTime).ToString();
         if (startTime >= 4f && !spawnersActive)
         {
-            petalSpawner.SetActive(true);
-            powerSpawner.SetActive(true);
+            //petalSpawner.SetActive(true);
+            //powerSpawner.SetActive(true);
             spawnersActive = true;
         }
 

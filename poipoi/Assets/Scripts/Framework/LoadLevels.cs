@@ -11,117 +11,83 @@ public class LoadLevels : MonoBehaviour {
     /// </summary>
 
     public MenuManager mm;
+
     public Image fade;
     private float fadeA = 0f;
     private float startTime = 0f;
     private float duration = 5f;
     private float t = 0f;
     private bool fadingOut = false;
+    public float fadeTime = 0f;
     private string levelToLoad;
-    public float buttonLoadY;
     public GameObject[] buttons;
     private bool allHidden = false;
     public bool hideBelow = true;
 
-	// Use this for initialization
-	void Start () {
+    public GameManager gm;
 
+    // Use this for initialization
+    void Start () {
+        
         startTime = Time.time;
-        mm = GameObject.FindGameObjectWithTag("MenuManager").GetComponent<MenuManager>();
+        gm = GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>();
 
     }
 	
 	// Update is called once per frame
 	void Update () {
-        if (fadingOut)
-        {
-            buttonHiddenCheck();
-        }
+        
     }
 
-    //setting meanuManagervarables
-    public void setAllYouCanEat()
+    public void setLevelSelected(int num)
     {
-        mm.gameModeAllYouCanEat = true;
-        mm.gameModeColours = false;
-        mm.gameModeHorders = false;
-        loadMenu2();
-    }
-    //setting meanuManagervarables
-    public void setColours()
-    {
-        mm.gameModeAllYouCanEat = false;
-        mm.gameModeColours = true;
-        mm.gameModeHorders = false;
-        loadMenu2();
-    }
-    //setting meanuManagervarables
-    public void setHorders()
-    {
-        mm.gameModeAllYouCanEat = false;
-        mm.gameModeColours = false;
-        mm.gameModeHorders = true;
-        loadMenu2();
+        gm.SetLevelSelected(num);
     }
 
-    //setting meanuManagervarables
-    public void setBigFish()
+    public void loadLevelSelect1()
     {
-        mm.gameModeBigFish = true;
-        mm.gameModeSchool = false;
-        mm.gameModeExtremePowerUps = false;
-        mm.gameModeTooManyPowerUps = false;
-        loadCharacterSelect();
+        fadingOut = true;
+        levelToLoad = "levelSelect1";
+        fadeOut();
+        //SceneManager.LoadScene(levelToLoad, LoadSceneMode.Single);
     }
-    //setting meanuManagervarables
-    public void setSchool()
+    public void load1PCharactor()
     {
-        mm.gameModeBigFish = false;
-        mm.gameModeSchool = true;
-        mm.gameModeExtremePowerUps = false;
-        mm.gameModeTooManyPowerUps = false;
-        loadCharacterSelect();
+        fadingOut = true;
+        levelToLoad = "1PCharactor";
+        fadeOut();
+        //SceneManager.LoadScene(levelToLoad, LoadSceneMode.Single);
     }
-    //setting meanuManagervarables
-    public void setExtremePowerUps()
+    public void loadTitle()
     {
-        mm.gameModeBigFish = false;
-        mm.gameModeSchool = false;
-        mm.gameModeExtremePowerUps = true;
-        mm.gameModeTooManyPowerUps = false;
-        loadCharacterSelect();
+        fadingOut = true;
+        levelToLoad = "Title";
+        fadeOut();
+        //SceneManager.LoadScene(levelToLoad, LoadSceneMode.Single);
     }
-    //setting meanuManagervarables
-    public void setTooManyPowerUps()
+    public void loadScoreScene()
     {
-        mm.gameModeBigFish = false;
-        mm.gameModeSchool = false;
-        mm.gameModeExtremePowerUps = false;
-        mm.gameModeTooManyPowerUps = true;
-        loadCharacterSelect();
-    }
-    //setting meanuManagervarables
-    public void setClassic()
-    {
-        mm.gameModeBigFish = false;
-        mm.gameModeSchool = false;
-        mm.gameModeExtremePowerUps = false;
-        mm.gameModeTooManyPowerUps = false;
-        loadCharacterSelect();
+        fadingOut = true;
+        levelToLoad = "ScoreScene";
+        fadeOut();
+        //SceneManager.LoadScene(levelToLoad, LoadSceneMode.Single);
     }
 
-    public void loadMenu1()
+    public void loadLevel()
     {
-        //make method for this
-        //fade.color = new Color(0, 0, 0, 0);
-        //fade.gameObject.SetActive(true);
-        //fadeA = 0f;
-
 
         fadingOut = true;
-        levelToLoad = "Menu1";
-        //fadeOut();
-        //SceneManager.LoadScene("Menu1", LoadSceneMode.Single);
+        if (gm.GetLevelSelected() == 1)
+        {
+            levelToLoad = "Level" + gm.GetLevelSelected().ToString();
+        }
+        else
+        {
+            levelToLoad = "FlowLevel";
+        }
+        
+        fadeOut();
+        //SceneManager.LoadScene(levelToLoad, LoadSceneMode.Single);
     }
 
     public void loadMenu2()
@@ -152,79 +118,26 @@ public class LoadLevels : MonoBehaviour {
     IEnumerator Fade()
     {
         //add variables for time and shit. not acutally secs?
-        while (t < 10f)
+        while (t < fadeTime)
         {
-            fadeA = Mathf.SmoothStep(0f, 1f, t / 10);
-            Debug.Log(fadeA);
+            fadeA = Mathf.SmoothStep(0f, 1f, t / fadeTime);
             fade.color = new Color(0, 0, 0, fadeA);
             t += Time.deltaTime;
-            yield return new WaitForSeconds(0.1f);
+            yield return new WaitForSeconds(0.01f);          
         }
-        
+        if (t >= fadeTime)
+        {
+            SceneManager.LoadScene(levelToLoad, LoadSceneMode.Single);
+        }
     }
 
     public void fadeOut()
     {
 
         // add varaibles
-        StartCoroutine("Fade");
-        if (t >= 10f)
-        {
-           // SceneManager.LoadScene(levelToLoad, LoadSceneMode.Single);
-        }
-        
+        fade.gameObject.SetActive(true);
+        StartCoroutine("Fade");       
     }
-
-    public void buttonHiddenCheck()
-    {
-
-        allHidden = true;
-        if (hideBelow)
-        {
-            foreach (GameObject b in buttons)
-            {
-                if (b.transform.localPosition.y > buttonLoadY)
-                {
-                    allHidden = false;
-                }
-            }
-        }
-        else
-        {
-            foreach (GameObject b in buttons)
-            {
-                if (b.transform.localPosition.y < buttonLoadY)
-                {
-                    allHidden = false;
-                }
-            }
-        }
-
-
-        if (allHidden)
-        {
-            //LoadScene
-            SceneManager.LoadScene(levelToLoad, LoadSceneMode.Single);
-        
-        }
-    }
-
-    //might not need anything below here
-    public void loadLevel1()
-    {
-        SceneManager.LoadScene("Level1", LoadSceneMode.Single);
-    }
-
-    public void loadLevel2()
-    {
-        SceneManager.LoadScene("Level2", LoadSceneMode.Single);
-    }
-
-    public void loadTitle()
-    {
-        SceneManager.LoadScene("Title", LoadSceneMode.Single);
-    }
-
 
     public void QuitGame()
     {

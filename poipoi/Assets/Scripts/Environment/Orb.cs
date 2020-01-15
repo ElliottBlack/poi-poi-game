@@ -10,6 +10,7 @@ public class Orb : MonoBehaviour {
     /// </summary>
 
     public Rigidbody2D rig;
+    public bool randomSpeed = true;
     public float speed = 1f;
 
     public bool powerUp = false;
@@ -25,79 +26,16 @@ public class Orb : MonoBehaviour {
     public bool p1Color = false;
     public bool p2Color = false;
 
-    public Manager man;
-
     private float secs = 0f;
 
+    private LevelManager lm;
     private void OnTriggerEnter2D(Collider2D coll)
     {
-        /// this is duplicated code both in trigger and collision. make method or take one out
-        if (man.gameModeColours)
+        if (coll.gameObject.tag == "petalKiller")
         {
-            if (coll.gameObject.tag == "petalKiller")
-            {
-                Destroy(this.gameObject);
-            }
-            if (coll.gameObject.tag == "Player")
-            {
-                if (powerUp)
-                {
-                    Destroy(this.gameObject);
-                }
-                if (!p1Color)
-                {
-                    man.AddScore1(1);
-                    if (!noColor)
-                    {
-                        man.AddScore2(-1);
-                    }
-                }
-                man.score1Display();
-                man.score2Display();
-                noColor = false;
-                p1Color = true;
-                p2Color = false;
-                spriteRender.color = new Color(0.54f, 1, 0.37f, 1);
-            }
-            else if (coll.gameObject.tag == "Player2")
-            {
-                if (powerUp)
-                {
-                    Destroy(this.gameObject);
-                }
-                if (!p2Color)
-                {
-                    man.AddScore2(1);
-                    if (!noColor)
-                    {
-                        man.AddScore1(-1);
-                    }
-                }
-                man.score1Display();
-                man.score2Display();
-                noColor = false;
-                p1Color = false;
-                p2Color = true;
-                spriteRender.color = new Color(1, 0.74f, 0.24f, 1);
-            }
+            Destroy(this.gameObject);
         }
-        else if (man.gameModeAllYouCanEat)
-        {
-            if (coll.gameObject.tag == "Player")
-            {
-                Destroy(this.gameObject);
-                man.AddScore1(1);
-                man.score1Display();
-                man.score2Display();
-            }
-            else if (coll.gameObject.tag == "Player2")
-            {
-                Destroy(this.gameObject);
-                man.AddScore2(1);
-                man.score1Display();
-                man.score2Display();
-            }
-        }
+
     }
 
     void OnCollisionEnter2D(Collision2D coll)
@@ -106,73 +44,19 @@ public class Orb : MonoBehaviour {
         {
             Destroy(this.gameObject);
         }
-        if (man.gameModeColours)
-        {
-            if (coll.gameObject.tag == "Player")
-            {
-                if (powerUp)
-                {
-                    Destroy(this.gameObject);
-                }
-                if (!p1Color)
-                {
-                    man.AddScore1(1);
-                    if (!noColor)
-                    {
-                        man.AddScore2(-1);
-                    }
-                }
-                man.score1Display();
-                man.score2Display();
-                noColor = false;
-                p1Color = true;
-                p2Color = false;
-                spriteRender.color = new Color(0.54f, 1, 0.37f, 1);
-            }
-            else if (coll.gameObject.tag == "Player2")
-            {
-                if (powerUp)
-                {
-                    Destroy(this.gameObject);
-                }
-                if (!p2Color)
-                {
-                    man.AddScore2(1);
-                    if (!noColor)
-                    {
-                        man.AddScore1(-1);
-                    }
-                }
-                man.score1Display();
-                man.score2Display();
-                noColor = false;
-                p1Color = false;
-                p2Color = true;
-                spriteRender.color = new Color(1, 0.74f, 0.24f, 1);
-            }
-        }
-        else if (man.gameModeAllYouCanEat)
-        {
-            if (coll.gameObject.tag == "Player")
-            {
-                Destroy(this.gameObject);                      
-                man.AddScore1(1);
-                man.score1Display();
-                man.score2Display();
-            }
-            else if (coll.gameObject.tag == "Player2")
-            {
-                Destroy(this.gameObject);
-                man.AddScore2(1);              
-                man.score1Display();
-                man.score2Display();
-            }
-        }
+
     }
 
     // Use this for initialization
     void Start () {
-        man = GameObject.FindGameObjectWithTag("Manager").GetComponent<Manager>(); 
+        lm = GameObject.FindGameObjectWithTag("LevelManager").GetComponent<LevelManager>();
+
+        if (randomSpeed)
+        {
+            speed = Random.Range(speed - 100, speed + 100);
+        }
+        
+
         spriteRender = this.GetComponent<SpriteRenderer>();
         rig = this.GetComponent<Rigidbody2D>();
         transform.Rotate(0f, 0f, Random.Range(0f, 360f));
@@ -212,45 +96,7 @@ public class Orb : MonoBehaviour {
        {
            this.transform.localPosition = stayPos;
        }
-       if (man.gameModeHorders)
-       {
-            if (this.transform.position.x > 10)
-            {
-                if (!p1Color)
-                {
-                    man.AddScore1(1);
-                    man.score1Display();
-                    p1Color = true;
-                    spriteRender.color = new Color(0.54f, 1, 0.37f, 1);
-                }
-            }
-            else if (this.transform.position.x < -10)
-            {
-                if (!p2Color)
-                {
-                    man.AddScore2(1);
-                    man.score2Display();
-                    p2Color = true;
-                    spriteRender.color = new Color(1, 0.74f, 0.24f, 1);
-                }
-            }
-            else
-            {
-                if (p1Color)
-                {
-                    man.AddScore1(-1);
-                    p1Color = false;
-                    man.score1Display();
-                }
-                else if (p2Color)
-                {
-                    man.AddScore2(-1);
-                    p2Color = false;
-                    man.score2Display();
-                }
-                spriteRender.color = new Color(1, 1, 1, 1);
-            }
-       }
+      
 
     }
 
