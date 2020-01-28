@@ -39,7 +39,7 @@ public class GameManager : MonoBehaviour {
     // Use this for initialization
     void Start () {
         DontDestroyOnLoad(this.gameObject);
-        
+        setP1Material(0);
     }
 	
 	// Update is called once per frame

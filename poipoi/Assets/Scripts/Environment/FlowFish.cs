@@ -5,7 +5,7 @@ using UnityEngine;
 public class FlowFish : MonoBehaviour {
 
     public Rigidbody2D rb2d;
-    private float speed = 1f;
+    public float speed = 1f;
     public float rotSpeed = 0.2f;
     private float turnTime = 5f;
 
@@ -42,7 +42,7 @@ public class FlowFish : MonoBehaviour {
     // Use this for initialization
     void Start()
     {
-        speed = Random.Range(7f, 9f);
+        speed = Random.Range(8f, 9f);
         if (!follower)
         {
             speed = 9.5f;
@@ -61,27 +61,32 @@ public class FlowFish : MonoBehaviour {
     // Update is called once per frame
     void Update()
     {
+     
+    }
+
+    void FixedUpdate()
+    {
         Movement();
         secs += Time.deltaTime;
-        if(secs > turnTime)
+        if (secs > turnTime)
         {
 
-            if(follower)
+            if (follower)
             {
                 followX = Random.Range(-followRange, followRange);
                 followY = Random.Range(-followRange, followRange);
             }
-            else 
+            else
             {
                 from = this.transform.rotation;
                 to = Quaternion.Euler(0f, 0f, Random.Range(0f, 360f));
                 rotSpeed = Random.Range(-1f, 1f);
             }
 
-            turnTime = Random.Range(5f,10f);
+            turnTime = Random.Range(5f, 10f);
             secs = 0f;
         }
-        if(changeFollow)
+        if (changeFollow)
         {
             changeSecs += Time.deltaTime;
             if (changeSecs >= changeTime)
@@ -90,9 +95,8 @@ public class FlowFish : MonoBehaviour {
                 follower = !follower;
             }
         }
-
-
     }
+
     void Movement()
     {
         if (follower)

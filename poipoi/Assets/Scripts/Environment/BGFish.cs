@@ -14,6 +14,7 @@ public class BGFish : MonoBehaviour {
     private float deathSecs = 0f;
     private float turnSecs = 0.3f;
     private float rotIncrease = 0.05f;
+    public float deathTime = 20f;
     // Use this for initialization
     void Start () {
         rb2d = GetComponent<Rigidbody2D>();
@@ -37,7 +38,7 @@ public class BGFish : MonoBehaviour {
 	void Update () {
         Movement();
         deathSecs += Time.deltaTime;
-        if(deathSecs >= 20f)
+        if(deathSecs >= deathTime)
         {
             Destroy(this.gameObject);
         }

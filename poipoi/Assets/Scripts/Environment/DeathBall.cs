@@ -73,6 +73,17 @@ public class DeathBall : MonoBehaviour {
 
         from = this.transform.rotation;
         to = Quaternion.Euler(0f, 0f, Random.Range(0f, 360f));
+        if (lm.questsActive[1])
+        {
+            frogQuestActive = true;
+            frogTrigger.radius = 25f;
+        }
+        if (lm.questsCompleted[1])
+        {
+            hungryFrog = false;
+            frogTrigger.enabled = false;
+            frogCollider.enabled = false;
+        }
     }
 	
 	// Update is called once per frame

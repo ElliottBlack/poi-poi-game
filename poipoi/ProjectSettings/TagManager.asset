@@ -25,6 +25,8 @@ TagManager:
   - LevelManager
   - Peach
   - Frog
+  - Flower
+  - MamaTurtle
   layers:
   - Default
   - TransparentFX

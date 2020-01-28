@@ -10,13 +10,20 @@ public class PeachTree : MonoBehaviour {
     private CircleCollider2D peachCollider;
     private Rigidbody2D peachRigidbody;
     private SpriteRenderer peachSpriteRenderer;
+    private Animator ani;
+    public AudioClip crow;
+    public AudioClip water;
+    public LevelManager lm;
     private void OnTriggerEnter2D(Collider2D coll)
     {
         if (coll.gameObject.tag == "Player")
         {
             peachCollider.enabled = true;
+            ani.Play("PeachShake", 0, 0);
             peachRigidbody.AddForce(peachSpeed);
             peachSpriteRenderer.sortingLayerName = "petal";
+            this.GetComponent<AudioSource>().PlayOneShot(crow, lm.soundVolume);
+            this.GetComponent<AudioSource>().PlayOneShot(water, lm.soundVolume);
         }
     }
     void OnCollisionEnter2D(Collision2D coll)
@@ -26,6 +33,7 @@ public class PeachTree : MonoBehaviour {
 
     // Use this for initialization
     void Start () {
+        ani = GetComponent<Animator>();
         peachCollider = peach.GetComponent<CircleCollider2D>();
         peachRigidbody = peach.GetComponent<Rigidbody2D>();
         peachSpriteRenderer = peach.GetComponent<SpriteRenderer>();

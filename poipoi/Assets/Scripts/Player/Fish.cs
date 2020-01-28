@@ -146,9 +146,6 @@ public class Fish : MonoBehaviour {
         startLoc = this.transform.position;
         if (startOfGame)
         {
-            cirColl.enabled = false;
-            trail.startColor = new Color(1, 1, 1, 0.5f);
-            trail.endColor = new Color(1, 1, 1, 0.5f);
             if (newWallFish)
             {
                 canMoveTime = canMoveTimeWall;
@@ -213,13 +210,7 @@ public class Fish : MonoBehaviour {
             if (startTime >= canMoveTime)
             {
                 canMove = true;
-            }
-            if (startTime >= canBeHitTime)
-            {
-                trail.startColor = new Color(1, 1, 1, 1);
-                trail.endColor = new Color(1, 1, 1, 1);
                 startOfGame = false;
-                cirColl.enabled = true;
             }
         }
     }

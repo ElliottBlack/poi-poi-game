@@ -4,10 +4,14 @@ using UnityEngine;
 
 public class FakeGravity : MonoBehaviour {
     public Rigidbody2D rb2d;
+    private float secs = 0f;
+    private float deathTime = 0f;
     // Use this for initialization
     void Start () {
         rb2d = GetComponent<Rigidbody2D>();
         transform.Rotate(0f, 0f, Random.Range(0f, 360f));
+        deathTime = Random.Range(60f, 180f);
+        rb2d.AddForce(500f * Random.insideUnitCircle.normalized);
     }
 	
 	// Update is called once per frame
@@ -25,5 +29,11 @@ public class FakeGravity : MonoBehaviour {
 
         //Apply our acceleration.
         rb2d.AddForce(toGravityOriginFromObject, ForceMode2D.Force);
+
+        secs += Time.deltaTime;
+        if (secs >= deathTime)
+        {
+            Destroy(this.gameObject);
+        }
     }
 }

@@ -44,7 +44,11 @@ public class SakuraTree : MonoBehaviour {
     void Start () {
         camNormalSize = camMain.orthographicSize;
         camSize = camNormalSize;
-	}
+        if (lm.questsCompleted[0])
+        {
+            viewedSakura = true;
+        }
+    }
 	
 	// Update is called once per frame
 	void Update () {
