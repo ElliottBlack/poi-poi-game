@@ -90,6 +90,23 @@ public class LoadLevels : MonoBehaviour {
         //SceneManager.LoadScene(levelToLoad, LoadSceneMode.Single);
     }
 
+    public void LoadingLevel (int sceneindex)
+    {
+        StartCoroutine(LoadAsynchronously(sceneindex));
+    }
+
+    IEnumerator LoadAsynchronously(int sceneIndex)
+    {
+        AsyncOperation operation = SceneManager.LoadSceneAsync(sceneIndex);
+
+        while(!operation.isDone)
+        {
+            Debug.Log(operation.progress);
+
+            yield return null;
+        }
+    }
+
     public void loadMenu2()
     {
         fadingOut = true;

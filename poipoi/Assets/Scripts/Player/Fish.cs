@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using WaterRippleForScreens;
 
 public class Fish : MonoBehaviour {
     /// <summary>
@@ -53,6 +54,12 @@ public class Fish : MonoBehaviour {
     public LevelManager lm;
     public GameObject deathExplosion;
 
+    public RippleEffect ripple;
+    public RippleGenerator rippleGen;
+    public Camera cam;
+    public ParticleSystem parSys;
+    private bool splashed = false;
+    private float splashCooldown = 0f;
     void OnCollisionEnter2D(Collision2D coll)
     {       
 
@@ -194,6 +201,22 @@ public class Fish : MonoBehaviour {
 
         Movement();
 
+        if (Input.GetKey(KeyCode.Space) && !splashed)
+        {
+            Splash();
+            splashed = true;
+        }
+
+        if(splashed)
+        {
+            splashCooldown += Time.deltaTime;
+            if(splashCooldown > 1f)
+            {
+                splashed = false;
+                splashCooldown = 0f;
+            }
+        }
+
     } 
 
     public void SetSkin(Material m)
@@ -245,5 +268,13 @@ public class Fish : MonoBehaviour {
 
         //Call the AddForce function of our Rigidbody2D rb2d supplying movement multiplied by speed to move our player.
         rb2d.AddForce(movement * speed);
+    }
+
+    void Splash()
+    {
+        //transform.Rotate(Vector3.forward * Random.Range(-2f, 2f) * rotSpeed);
+        parSys.Play();
+       // ripple.SetNewRipplePosition(new Vector2(cam.WorldToScreenPoint(this.transform.position).x, cam.WorldToScreenPoint(this.transform.position).y));
+       // ripple.SetNewRipplePosition(new Vector2(0f, 0f));
     }
 }

@@ -23,7 +23,6 @@ public class TreePetalSpawner : MonoBehaviour {
             petalPosition = new Vector3(this.transform.position.x + Random.Range(-spawnRange, spawnRange), this.transform.position.y + Random.Range(-spawnRange, spawnRange), 0f);
             petalRot = Quaternion.Euler(0f, 0f, Random.Range(0f, 360f));
             Instantiate(petal, petalPosition, petalRot);
-            Debug.Log("working");
             secs = 0f;
         }
 	}

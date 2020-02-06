@@ -29,6 +29,10 @@ public class LevelManager : MonoBehaviour {
 
     public bool[] questsActive;
     public bool[] questsCompleted;
+    private int numQuentsCompleted = 0;
+
+    public TrailRenderer fishTrail;
+    public Fish fish;
 
     // Use this for initialization
     void Start () {
@@ -91,19 +95,23 @@ public class LevelManager : MonoBehaviour {
     }
 
     //add code to send info to gamemanager need this for saving
-    public void QuestActivate(string s,int qn)
+    public void QuestActivate(int qn)
     {
         //dont need string s in the method can take out
         //questText.text = s;
         if (questTextVisible)
         {
-            Wait(5f);
+            StartCoroutine(Wait(5, qn, true));
         }
-        questText.text = questNames[qn];
-        questList[qn].text = questNames[qn];
-        questsActive[qn] = true;
-        StartCoroutine(FadeTextToFullAlpha(1f, questText));
-        questTextVisible = true;
+        else
+        {
+            questText.text = questNames[qn];
+            questList[qn].text = questNames[qn];
+            questsActive[qn] = true;
+            StartCoroutine(FadeTextToFullAlpha(1f, questText));
+            questTextVisible = true;
+        }
+
     }
 
     //add code to send info to gamemanager need this for saving
@@ -111,18 +119,45 @@ public class LevelManager : MonoBehaviour {
     {
         if (questTextVisible)
         {
-            Wait(5f);
+            StartCoroutine(Wait(5f, qn, false));
         }
-        questText.text = "Objective Complete";
-        questList[qn].text = "Completed";
-        questsCompleted[qn] = true;
-        StartCoroutine(FadeTextToFullAlpha(1f, questText));
-        StartCoroutine(FadeTextToFullAlpha(1f, skinText));
-        questTextVisible = true;
-        skinTextVisible = true;
+        else
+        {
+            questText.text = "Objective Complete";
+            questList[qn].text = "Completed";
+            questsCompleted[qn] = true;
+            StartCoroutine(FadeTextToFullAlpha(1f, questText));
+            StartCoroutine(FadeTextToFullAlpha(1f, skinText));
+            questTextVisible = true;
+            skinTextVisible = true;
 
-        charSelect.fishSpritesList.Add(fishSprites[2 + qn]);
-        charSelect.fishMaterialsList.Add(fishMaterials[2 + qn]);
+            charSelect.fishSpritesList.Add(fishSprites[2 + qn]);
+            charSelect.fishMaterialsList.Add(fishMaterials[2 + qn]);
+
+            foreach (bool q in questsCompleted)
+            {
+                if (q)
+                {
+                    numQuentsCompleted += 1;
+                }
+            }
+            if (numQuentsCompleted == questsCompleted.Length - 1)
+            {
+                QuestActivate(6);
+            }
+            else if(numQuentsCompleted >= questsCompleted.Length)
+            {
+                Debug.Log("swhat");
+                fishTrail.time = 3f;
+                fish.speed += 800f;
+            }
+            else
+            {
+                numQuentsCompleted = 0;
+            }
+        }
+
+
     }
 
     public IEnumerator FadeTextToFullAlpha(float t, TextMeshProUGUI i)
@@ -145,10 +180,19 @@ public class LevelManager : MonoBehaviour {
         }
     }
 
-    IEnumerator Wait(float secs)
+    //waits until text has left the screen
+    IEnumerator Wait(float secs, int qn, bool act)
     {
         //yield on a new YieldInstruction that waits for 5 seconds.
         yield return new WaitForSeconds(secs);
+        if (act)
+        {
+            QuestActivate(qn);
+        }
+        else
+        {
+            QuestComplete(qn);
+        }
     }
 
     public void QuitToTitle()

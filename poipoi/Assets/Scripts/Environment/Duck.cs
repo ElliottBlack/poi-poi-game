@@ -19,6 +19,7 @@ public class Duck : MonoBehaviour {
     private bool questActive = false;
     public Vector2 normalOffset;
     public Vector2 normalSize;
+    private Animator ani;
 
 
     void OnCollisionEnter2D(Collision2D coll)
@@ -31,6 +32,7 @@ public class Duck : MonoBehaviour {
             pos1.gameObject.SetActive(false);
             pos2.gameObject.SetActive(false);
             pos3.gameObject.SetActive(false);
+            ani.SetBool("Scared", true);
         }
     }
 
@@ -39,20 +41,21 @@ public class Duck : MonoBehaviour {
 
         if (coll.gameObject.tag == "Player" && !move && questActive)
         {
-            move =true;
+            move = true;
         }
         if (coll.gameObject.tag == "Player" && !questActive)
         {
             questActive = true;
             boxColl.offset = normalOffset;
             boxColl.size = normalSize;
-            lm.QuestActivate("Catch the Duck", 2);
+            lm.QuestActivate(2);
         }
     }
 
 
     // Use this for initialization
     void Start () {
+        ani = GetComponent<Animator>();
         pos3Start = pos3.position;
         cirColl = this.GetComponent<CircleCollider2D>();
         boxColl = this.GetComponent<BoxCollider2D>();
@@ -105,10 +108,19 @@ public class Duck : MonoBehaviour {
 
     void Movement(Vector3 to)
     {
+        ani.SetBool("Scared", true);
         step = speed * Time.deltaTime; 
         transform.position = Vector3.MoveTowards(this.transform.position, to, step);
+
+        Vector3 diff = to - transform.position;
+        diff.Normalize();
+        float rot_z = Mathf.Atan2(diff.y, diff.x) * Mathf.Rad2Deg;
+        transform.rotation = Quaternion.Euler(0f, 0f, rot_z - 90);
+
         if (this.transform.position == to)
         {
+            ani.SetBool("Scared", false);
+            transform.rotation = Quaternion.Euler(0f, 0f, 90f);
             move = false;
             atPos1 = !atPos1;
         }
@@ -118,11 +130,20 @@ public class Duck : MonoBehaviour {
     {
         //need to add code from duckpos to set circle to true on trigger with player
         //duck mybae not circle just go box movement or i can program a kinda circle.
+        ani.SetBool("Swimming", true);
         step = speed * Time.deltaTime;
         transform.position = Vector3.MoveTowards(this.transform.position, pos3.position, step);
         pos3.position = Vector3.MoveTowards(pos3.position, to, step);
+
+        Vector3 diff = pos3.position - transform.position;
+        diff.Normalize();
+        float rot_z = Mathf.Atan2(diff.y, diff.x) * Mathf.Rad2Deg;
+        transform.rotation = Quaternion.Euler(0f, 0f, rot_z - 90);
+
         if (this.transform.position == to)
         {
+            ani.SetBool("Swimming", false);
+            transform.rotation = Quaternion.Euler(0f, 0f, 90f);
             move = false;
             circle = false;
             pos3.position = pos3Start;

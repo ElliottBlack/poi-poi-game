@@ -45,7 +45,7 @@ public class DeathBall : MonoBehaviour {
     {
         if (coll.gameObject.tag == "Player" && hungryFrog && !frogQuestActive)
         {
-            lm.QuestActivate("Feed the Frog", 1);
+            lm.QuestActivate(1);
             frogTrigger.radius = 25f;
             frogQuestActive = true;
         } 

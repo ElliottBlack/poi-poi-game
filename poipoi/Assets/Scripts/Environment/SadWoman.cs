@@ -26,7 +26,7 @@ public class SadWoman : MonoBehaviour {
         {
             questActive = true;
             cirColl.radius = 5f;
-            lm.QuestActivate("Cheer up the Woman", 3);
+            lm.QuestActivate(3);
         }
     }
 

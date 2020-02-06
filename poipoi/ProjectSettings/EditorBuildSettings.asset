@@ -41,13 +41,13 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/New/Level1.unity
     guid: 939b209c9fb0619469aabeb5a9c5c62e
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/New/1PCharactor.unity
     guid: 3dcef1e4c5fc50f4bba2e94f8ad3b381
   - enabled: 0
     path: Assets/Scenes/New/Level2.unity
     guid: fca2edb232e722b44b9701d1134d6a0e
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/New/ScoreScene.unity
     guid: 30e566d3b81c38c40872af35d5e53ba7
   - enabled: 1

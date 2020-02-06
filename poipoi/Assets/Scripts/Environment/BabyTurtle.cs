@@ -18,7 +18,7 @@ public class BabyTurtle : MonoBehaviour {
         if (coll.gameObject.tag == "Player" && !questActive)
         {
             questActive = true;
-            lm.QuestActivate("Help Baby Turtle", 5);
+            lm.QuestActivate(5);
             Debug.Log(questActive);
         }
 
