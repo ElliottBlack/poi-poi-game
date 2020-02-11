@@ -41,9 +41,10 @@ public class GameManager : MonoBehaviour {
         DontDestroyOnLoad(this.gameObject);
         setP1Material(0);
     }
-	
-	// Update is called once per frame
-	void Update () {
+
+    // Update is called once per frame
+    void Update()
+    {
         /*pause code (ccould add menu and what not but maybe just leave out, not needed for prototype)
 		if (Input.GetKeyDown(KeyCode.Escape) && !paused)
         {
@@ -56,7 +57,7 @@ public class GameManager : MonoBehaviour {
             Debug.Log("asd");
             Time.timeScale = 1;
         }
-        
+
         if (Input.GetKeyDown(KeyCode.Escape))
         {
             if (SceneManager.GetActiveScene().name == "Title") 
@@ -70,6 +71,10 @@ public class GameManager : MonoBehaviour {
             
         }
         */
+        if (Input.GetKeyDown(KeyCode.Q))
+        {
+            ExitApp();
+        }
     }
 
     public void ExitApp()

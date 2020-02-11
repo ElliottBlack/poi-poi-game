@@ -45,7 +45,7 @@ public class BGFish : MonoBehaviour {
 	}
     void Movement()
     {
-
+        Debug.Log(rotSpeed);
 
         secs += Time.deltaTime;
         if (secs >= turnSecs)
@@ -60,12 +60,14 @@ public class BGFish : MonoBehaviour {
             }
 
 
-            if (rotSpeed <= -0.2)
+            if (rotSpeed < -0.2)
             {
+              
                 goUp = true;
             }
-            else if (rotSpeed >= 0.2)
+            else if (rotSpeed > 0.2)
             {
+                
                 goUp = false;
             }
             secs = 0;

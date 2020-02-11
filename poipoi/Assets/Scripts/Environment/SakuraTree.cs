@@ -9,6 +9,7 @@ public class SakuraTree : MonoBehaviour {
     public CameraFollow camFoll;
     public Camera camMain;
     public GameObject player;
+    public float camSizeSpeed = 1f;
     private bool viewedSakura = false;
     private bool viewingSakura = false;
 
@@ -56,14 +57,14 @@ public class SakuraTree : MonoBehaviour {
         {
             if (camMain.orthographicSize < camSakuraSize)
             {
-                camMain.orthographicSize += Time.deltaTime * 2f;
+                camMain.orthographicSize += Time.deltaTime * camSizeSpeed;
             }
         }
         else
         {
             if (camMain.orthographicSize > camNormalSize)
             {
-                camMain.orthographicSize -= Time.deltaTime * 2f;
+                camMain.orthographicSize -= Time.deltaTime * camSizeSpeed;
             }
         }
 	}
