@@ -2,8 +2,9 @@
 
 2 Player koi battle game. Inspired by the koi ponds in Japan. Collect sakura petals to win.  Blow bubbles at opponents to blast them off the map. Large array of coloured koi to choose from. Relaxing art and environment coupled with smooth gameplay. Multiple game modes and bonuses (some game features not yet implemented)
 
-![](PoipoiUI.gif)
-![](poipoigameplay.gif)
+![](title.png)
+![](school.png)
+![](sakura.png)
 
 ### Running Game
 
