@@ -21,10 +21,6 @@ public class SakuraTree : MonoBehaviour {
     {
         if (coll.gameObject.tag == "Player")
         {
-            if(!viewedSakura)
-            {
-                lm.QuestComplete(0);
-            }
 
             camFoll.target = this.gameObject;
             viewingSakura = true;
@@ -45,10 +41,6 @@ public class SakuraTree : MonoBehaviour {
     void Start () {
         camNormalSize = camMain.orthographicSize;
         camSize = camNormalSize;
-        if (lm.questsCompleted[0])
-        {
-            viewedSakura = true;
-        }
     }
 	
 	// Update is called once per frame

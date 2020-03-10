@@ -49,6 +49,7 @@ public class Fish : MonoBehaviour {
     public float wallSpawnDepth;
 
     public AudioClip impact;
+    public AudioClip rippleFX;
     AudioSource audioSource;
 
     public LevelManager lm;
@@ -60,67 +61,52 @@ public class Fish : MonoBehaviour {
     public ParticleSystem parSys;
     private bool splashed = false;
     private float splashCooldown = 0f;
-    void OnCollisionEnter2D(Collision2D coll)
-    {       
 
+    // keeps track of where the fish is and what stage of dragon development they are at.
+    public bool[] pondNum;
+    public float[] pondSpeed;
+    public float[] pondCameraSize;
+    public Material[] pondDragonMaterials;
+    public float[] pondRotSpeeds;
+    public float[] pondTrailTimes;
+    public float[] pondTrailWidths;
+    private float camSize;
+
+    public GameObject triggerBubble;
+    void OnCollisionEnter2D(Collision2D coll)
+    {
+        if (coll.gameObject.tag == "PowerUp")
+        {
+            audioSource.PlayOneShot(impact, 0.7F);
+        }
     }
 
     private void OnTriggerEnter2D(Collider2D coll)
     {
-        // kinda working looks weird. tail shrinks and players ooks like the spawn away from wall not coming out of it.
-        /*
-            wallFishPos = new Vector3(-this.transform.position.x, this.transform.position.y, 0f);
-            trail.transform.parent = null;
-            this.transform.position = wallFishPos;
-            GameObject trailClone = Instantiate(trailGameObject, this.transform.position, this.transform.rotation);
-            trailClone.transform.parent = this.transform;
-            trailClone.transform.localPosition = new Vector3(7f, 0f, 0f);
-            trail = trailClone.GetComponent<TrailRenderer>();
-        */
-        if (coll.gameObject.tag == "SideWall")
+
+        if (coll.gameObject.tag == "Waterfall")
         {
-            trail.Clear();
-            wallFishPos = new Vector3(-this.transform.position.x, this.transform.position.y, 0f);
-            this.transform.position = wallFishPos;
-            trail.Clear();
-
-            //trail.transform.parent = null;
-            //this.transform.position = wallFishPos;
-            // GameObject trailClone = Instantiate(trailGameObject, this.transform.position, this.transform.rotation);
-            // trailClone.transform.parent = this.transform;
-            //trailClone.transform.localPosition = new Vector3(7f, 0f, 0f);
-            //trail = trailClone.GetComponent<TrailRenderer>();
-
-            //GameObject newFish = Instantiate(this.gameObject, wallFishPos, this.transform.rotation);
-            // newFish.GetComponent<Fish>().startOfGame = false;
-        }
-        if (coll.gameObject.tag == "TopWall" )
-        {
-            /* looks weird try different approach
-            wallFishPos = new Vector3(this.transform.position.x, -this.transform.position.y, 0f);
-            trail.transform.parent = null;
-            this.transform.position = wallFishPos;
-            GameObject trailClone = Instantiate(trailGameObject, this.transform.position, this.transform.rotation);
-            trailClone.transform.parent = this.transform;
-            trailClone.transform.localPosition = new Vector3(7f,0f,0f);
-            trail = trailClone.GetComponent<TrailRenderer>();
             
-            ////////
+            coll.enabled = false;
 
-            canMove = false;
-            if (this.transform.position.y > -this.transform.position.y)
+            for(int i = 0; i < pondNum.Length-1; i++)
             {
-                wallFishPos = new Vector3(this.transform.position.x, -this.transform.position.y - wallSpawnDepth, 0f);
-            }
-            else
-            {
-                wallFishPos = new Vector3(this.transform.position.x, -this.transform.position.y + wallSpawnDepth, 0f);
-            }
+                if (pondNum[i])
+                {
+                    trail.material = pondDragonMaterials[i + 1];
+                    rotSpeed = pondRotSpeeds[i + 1];
+                    trail.time = pondTrailTimes[i + 1];
+                    trail.startWidth = pondTrailWidths[i + 1];
 
-            
-            GameObject newFish = Instantiate(this.gameObject, wallFishPos, this.transform.rotation);
-            newFish.GetComponent<Fish>().newWallFish = true;
-            */
+
+                    speed = pondSpeed[i+1];
+                    pondNum[i] = false;
+                    pondNum[i+1] = true;
+                    camSize = pondCameraSize[i+1];
+                    lm.PowerPetalCollected(false);
+                    break;
+                }
+            }          
         }
 
 
@@ -128,6 +114,7 @@ public class Fish : MonoBehaviour {
         {
             audioSource.PlayOneShot(impact, 0.7F);
         }
+
 
     }
 
@@ -137,7 +124,7 @@ public class Fish : MonoBehaviour {
         rb2d = GetComponent<Rigidbody2D>();
         audioSource = GetComponent<AudioSource>();
         spriteRender = this.GetComponent<SpriteRenderer>();
-        gm = GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>();
+        /*gm = GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>();
         if (gm != null)
         {
             if (player1)
@@ -145,6 +132,7 @@ public class Fish : MonoBehaviour {
                 trail.sharedMaterial = gm.getP1Material();
             }
         }
+        */
         cirColl = GetComponent<CircleCollider2D>();
 
         //start of game move finish to target location from bottom
@@ -164,28 +152,22 @@ public class Fish : MonoBehaviour {
         {
             this.gameObject.tag = "Player2";
         }
-        //Get and store a reference to the Rigidbody2D component so that we can access it.
-        
-        //man = GameObject.FindGameObjectWithTag("Manager").GetComponent<Manager>();
 
-
-        //add character selected
-        if (player1)
+        //set speed to whichever pond the player is in.
+        for (int i = 0; i < pondNum.Length; i++)
         {
-            //normal sprite code
-            //spriteRender.sprite = man.fishSprites[man.p1CharacterNum];
+            if (pondNum[i])
+            { 
+                speed = pondSpeed[i];
+                camSize = pondCameraSize[i];
+                trail.material = pondDragonMaterials[i];
+                rotSpeed = pondRotSpeeds[i];
+                trail.time = pondTrailTimes[i];
+                trail.startWidth = pondTrailWidths[i];
 
-            //trail.materials[0] = man.fishMaterials[man.p1CharacterNum];
-            //trail.sharedMaterial = man.fishMaterials[man.p1CharacterNum];  this si code for different sprites
+            }
         }
-        else
-        {
-            //normal sprite code
-            //spriteRender.sprite = man.fishSprites[man.p2CharacterNum];
 
-            //trail.materials[0] = man.fishMaterials[man.p2CharacterNum];
-           // trail.sharedMaterial = man.fishMaterials[man.p2CharacterNum];  this is code for different sprites
-        }
 
     }
     private void Update()
@@ -198,19 +180,20 @@ public class Fish : MonoBehaviour {
     {
 
         EnterStage();
-
+        CameraZoom();
         Movement();
 
         if (Input.GetKey(KeyCode.Space) && !splashed)
         {
             Splash();
+            Instantiate(triggerBubble, parSys.transform.position, this.transform.rotation);
             splashed = true;
         }
 
         if(splashed)
         {
             splashCooldown += Time.deltaTime;
-            if(splashCooldown > 1f)
+            if(splashCooldown > 3f)
             {
                 splashed = false;
                 splashCooldown = 0f;
@@ -274,7 +257,17 @@ public class Fish : MonoBehaviour {
     {
         //transform.Rotate(Vector3.forward * Random.Range(-2f, 2f) * rotSpeed);
         parSys.Play();
-       // ripple.SetNewRipplePosition(new Vector2(cam.WorldToScreenPoint(this.transform.position).x, cam.WorldToScreenPoint(this.transform.position).y));
-       // ripple.SetNewRipplePosition(new Vector2(0f, 0f));
+        audioSource.PlayOneShot(rippleFX, 0.7F);
+        // ripple.SetNewRipplePosition(new Vector2(cam.WorldToScreenPoint(this.transform.position).x, cam.WorldToScreenPoint(this.transform.position).y));
+        // ripple.SetNewRipplePosition(new Vector2(0f, 0f));
     }
+
+    void CameraZoom()
+    {
+        if (cam.orthographicSize < camSize)
+        {
+            cam.orthographicSize += Time.deltaTime * 10f;
+        }
+    }
+
 }

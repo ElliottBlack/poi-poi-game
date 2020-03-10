@@ -12,20 +12,19 @@ public class BabyTurtle : MonoBehaviour {
     private float step = 0f;
     public Transform fish;
     public Transform mama;
+    public GameObject sakura;
+    public bool spawnedPetal = false;
+
 
     private void OnTriggerEnter2D(Collider2D coll)
     {
         if (coll.gameObject.tag == "Player" && !questActive)
         {
             questActive = true;
-            lm.QuestActivate(5);
-            Debug.Log(questActive);
         }
 
         if (coll.gameObject.tag == "MamaTurtle" && questActive)
         {
-            Debug.Log("nope");
-            lm.QuestComplete(5);
             mamaFound = true;
             cirColl.enabled = false;
         }
@@ -34,19 +33,11 @@ public class BabyTurtle : MonoBehaviour {
     // Use this for initialization
     void Start () {
         cirColl = this.GetComponent<CircleCollider2D>();
-        if (lm.questsActive[5])
-        {
-            questActive = true;
-        }
-        if (lm.questsCompleted[5])
-        {
-            cirColl.enabled = false;
-            mamaFound = true;
-        }
     }
 	
 	// Update is called once per frame
 	void Update () {
+
 		if(questActive && !mamaFound)
         {
             FollowPlayer();
@@ -55,6 +46,13 @@ public class BabyTurtle : MonoBehaviour {
         if(mamaFound)
         {
             HugMum();
+            if(!spawnedPetal)
+            {
+                questActive = false;
+                Instantiate(sakura, this.transform.position, this.transform.rotation);
+                spawnedPetal = true;
+            }
+
         }
 	}
     void FollowPlayer()
@@ -78,5 +76,13 @@ public class BabyTurtle : MonoBehaviour {
 
         step = speed * Time.deltaTime;
         transform.position = Vector3.MoveTowards(this.transform.position, mama.position, step);
+        if(Vector3.Distance(this.transform.position, mama.position) <= 0.1)
+        {
+            Destroy(this.GetComponent<Rigidbody2D>());
+            transform.parent = mama;
+            mamaFound = false;
+            
+        }
+
     }
 }

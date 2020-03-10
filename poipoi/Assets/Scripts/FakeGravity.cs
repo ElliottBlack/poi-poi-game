@@ -6,18 +6,24 @@ public class FakeGravity : MonoBehaviour {
     public Rigidbody2D rb2d;
     private float secs = 0f;
     private float deathTime = 0f;
+    public Vector3 gravityOrigin;
+    public float spawnForce = 500f;
+    public Sprite[] petalSprites;
+    private SpriteRenderer spriteRen;
     // Use this for initialization
     void Start () {
+        spriteRen = this.GetComponent<SpriteRenderer>();
+        spriteRen.sprite = petalSprites[Random.Range(0,4)];
         rb2d = GetComponent<Rigidbody2D>();
         transform.Rotate(0f, 0f, Random.Range(0f, 360f));
         deathTime = Random.Range(60f, 180f);
-        rb2d.AddForce(500f * Random.insideUnitCircle.normalized);
+        rb2d.AddForce(spawnForce * Random.insideUnitCircle.normalized);
     }
 	
 	// Update is called once per frame
 	void Update () {
         //Define our gravity origin in world space. (This could be an objects transform.position )
-        Vector3 gravityOrigin = new Vector3(0.0f, 0.5f, 0.0f);
+       // Vector3 gravityOrigin = new Vector3(0.0f, 0.5f, 0.0f);
 
         //Get a vector to our gravity origin from object and normalize.
         Vector3 toGravityOriginFromObject = gravityOrigin - gameObject.transform.position;

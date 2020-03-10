@@ -43,19 +43,13 @@ public class DeathBall : MonoBehaviour {
 
     private void OnTriggerEnter2D(Collider2D coll)
     {
-        if (coll.gameObject.tag == "Player" && hungryFrog && !frogQuestActive)
-        {
-            lm.QuestActivate(1);
-            frogTrigger.radius = 25f;
-            frogQuestActive = true;
-        } 
-        if (coll.gameObject.tag == "Peach" && hungryFrog && frogQuestActive)
+        if (coll.gameObject.tag == "Peach" && hungryFrog)
         {
             frogCollider.enabled = true;
             ani.Play("FrogJump", 0, 0);
             rb2d.AddForce(transform.up * thrustSpeed * 2f);
             eatPeach = true;
-            frogTrigger.enabled = false;
+            //frogTrigger.enabled = false;
         }
     }
     void OnCollisionEnter2D(Collision2D coll)
@@ -73,17 +67,10 @@ public class DeathBall : MonoBehaviour {
 
         from = this.transform.rotation;
         to = Quaternion.Euler(0f, 0f, Random.Range(0f, 360f));
-        if (lm.questsActive[1])
-        {
-            frogQuestActive = true;
-            frogTrigger.radius = 25f;
-        }
-        if (lm.questsCompleted[1])
-        {
-            hungryFrog = false;
-            frogTrigger.enabled = false;
-            frogCollider.enabled = false;
-        }
+
+
+        frogQuestActive = true;
+        frogTrigger.radius = 25f;
     }
 	
 	// Update is called once per frame

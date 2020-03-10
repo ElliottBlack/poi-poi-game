@@ -10,40 +10,27 @@ public class SadWoman : MonoBehaviour {
     private bool happy = false;
     private AudioSource crying;
 
+    public GameObject sakura;
+    private GameObject spawnedSakura;
     // Use this for initialization
 
     private void OnTriggerEnter2D(Collider2D coll)
     {
 
-        if (coll.gameObject.tag == "Flower" && questActive && !happy)
+        if (coll.gameObject.tag == "Flower" && !happy)
         {
             happy = true;
             crying.Stop();
-            lm.QuestComplete(3);
             cirColl.enabled = false;
-        }
-        if (coll.gameObject.tag == "Player" && !questActive)
-        {
-            questActive = true;
-            cirColl.radius = 5f;
-            lm.QuestActivate(3);
+            spawnedSakura = Instantiate(sakura, coll.transform.position, Quaternion.identity);
+            spawnedSakura.GetComponent<Rigidbody2D>().AddForce(transform.up * 3000f);
         }
     }
 
     void Start () {
         cirColl = this.GetComponent<CircleCollider2D>();
         crying = this.GetComponent<AudioSource>();
-        if (lm.questsActive[3])
-        {
-            questActive = true;
-            cirColl.radius = 5f;
-        }
-        if (lm.questsCompleted[3])
-        {
-            crying.Stop();
-            happy = true;
-            cirColl.enabled = false;
-        }
+        cirColl.radius = 5f;
     }
 	
 	// Update is called once per frame

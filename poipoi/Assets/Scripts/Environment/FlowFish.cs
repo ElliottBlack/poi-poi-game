@@ -22,6 +22,7 @@ public class FlowFish : MonoBehaviour {
     private float followRange = 40f;
 
     private Vector3 OriginVec;
+    private Vector3 StartVec;
     private bool CenterMove = false;
     private float originSecs = 0f;
 
@@ -30,18 +31,25 @@ public class FlowFish : MonoBehaviour {
     // can add time for both lead and follow to choose how long each fish follows the school vs does its own thing
     public float changeTime = 10f;
 
+    public ParticleSystem flowEcho;
+
     private float secs = 0f;
     private void OnTriggerEnter2D(Collider2D coll)
     {
         if (coll.gameObject.tag == "Wall" && !follower)
         {
-            OriginVec = Vector3.zero - transform.position;
+            OriginVec = StartVec - transform.position;
             CenterMove = true;
+        }
+        if (coll.gameObject.tag == "Bubble")
+        {
+            flowEcho.Play();
         }
     }
     // Use this for initialization
     void Start()
     {
+        StartVec = this.transform.position;
         speed = Random.Range(8f, 9f);
         if (!follower)
         {
@@ -117,12 +125,20 @@ public class FlowFish : MonoBehaviour {
         {
             float angle = Mathf.Atan2(OriginVec.y, OriginVec.x) * Mathf.Rad2Deg;
             transform.rotation = Quaternion.AngleAxis(angle, Vector3.forward);
+            /*
             originSecs += Time.deltaTime;
             if(originSecs >= 30f)
             {
                 originSecs = 0f;
                 CenterMove = false;
             }
+            */
+            float dist = Vector3.Distance(StartVec, transform.position);
+            if (dist <= 5)
+            {
+                CenterMove = false;
+            }
+
         }
         //this.transform.rotation = Quaternion.Slerp(from, to, rotSpeed);
         

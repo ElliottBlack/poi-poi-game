@@ -7,6 +7,23 @@ public class Turtle : MonoBehaviour {
     public Rigidbody2D rb2d;
     public float speed = 1f;
     public float rotSpeed = 0.2f;
+    public bool inShell = false;
+    private bool found = false;
+    public bool spawnPetal = false;
+    public GameObject petal;
+    public Transform head;
+
+    public float petalx = 10f;
+    public float petaly = 0f;
+
+    private void OnTriggerEnter2D(Collider2D coll)
+    {
+        if (coll.gameObject.tag == "Bubble" && inShell)
+        {
+            found = true;
+        }
+
+    }
 
     // Use this for initialization
     void Start () {
@@ -15,7 +32,26 @@ public class Turtle : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-        Movement();
+        if(inShell)
+        {
+            if(found)
+            {
+                inShell = false;
+                GetComponent<Animator>().SetBool("ComeOut", true);
+                if(spawnPetal)
+                {
+                    GameObject p;
+                    p = Instantiate(petal, new Vector3(head.position.x + petalx, head.position.y + petaly, 0), this.transform.rotation);
+                    p.transform.SetParent(head);
+                    p.GetComponent<CircleCollider2D>().isTrigger = true;
+                }
+            }
+        }
+        else
+        {
+            Movement();
+        }
+
 	}
 
     void Movement ()

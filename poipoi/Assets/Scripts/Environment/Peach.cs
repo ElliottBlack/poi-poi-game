@@ -6,14 +6,16 @@ public class Peach : MonoBehaviour {
 
     public DeathBall frog;
     public LevelManager lm;
+    public GameObject sakura;
 
     void OnCollisionEnter2D(Collision2D coll)
     {
-        if (coll.gameObject.tag == "Frog" && frog.hungryFrog && frog.frogQuestActive)
+        if (coll.gameObject.tag == "Frog" && frog.hungryFrog)
         {
-            lm.QuestComplete(1);
+            Instantiate(sakura, this.transform.position, this.transform.rotation);
+
             frog.hungryFrog = false;
-            frog.EnableCollider(false);
+            //frog.EnableCollider(false);
             Destroy(this.gameObject);
         }
     }

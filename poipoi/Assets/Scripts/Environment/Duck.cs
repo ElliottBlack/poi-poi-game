@@ -21,12 +21,19 @@ public class Duck : MonoBehaviour {
     public Vector2 normalSize;
     private Animator ani;
 
+    public GameObject sakura;
+    private GameObject spawnedSakura;
 
     void OnCollisionEnter2D(Collision2D coll)
     {
         if (coll.gameObject.tag == "Player")
         {
-            lm.QuestComplete(2);
+
+            spawnedSakura = Instantiate(sakura, this.transform.position, Quaternion.identity);
+            Destroy(sakura);
+            spawnedSakura.transform.localScale = new Vector3(1,1,1);
+            spawnedSakura.GetComponent<Rigidbody2D>().AddForce(transform.up*100000f);
+
             cirColl.enabled = false;
             boxColl.enabled = false;
             pos1.gameObject.SetActive(false);
@@ -43,13 +50,6 @@ public class Duck : MonoBehaviour {
         {
             move = true;
         }
-        if (coll.gameObject.tag == "Player" && !questActive)
-        {
-            questActive = true;
-            boxColl.offset = normalOffset;
-            boxColl.size = normalSize;
-            lm.QuestActivate(2);
-        }
     }
 
 
@@ -59,13 +59,12 @@ public class Duck : MonoBehaviour {
         pos3Start = pos3.position;
         cirColl = this.GetComponent<CircleCollider2D>();
         boxColl = this.GetComponent<BoxCollider2D>();
-        if (lm.questsActive[2])
-        {
-            questActive = true;
-            boxColl.offset = normalOffset;
-            boxColl.size = normalSize;
-        }
-        if (lm.questsCompleted[2])
+
+        boxColl.offset = normalOffset;
+        boxColl.size = normalSize;
+        questActive = true;
+
+        if (!questActive)
         {
             cirColl.enabled = false;
             boxColl.enabled = false;
@@ -80,7 +79,8 @@ public class Duck : MonoBehaviour {
 		
         if(move)
         {
-            if(atPos1)
+            cirColl.enabled = false;
+            if (atPos1)
             {
                 if(circle)
                 {
@@ -117,11 +117,13 @@ public class Duck : MonoBehaviour {
         float rot_z = Mathf.Atan2(diff.y, diff.x) * Mathf.Rad2Deg;
         transform.rotation = Quaternion.Euler(0f, 0f, rot_z - 90);
 
-        if (this.transform.position == to)
+        if (Vector3.Distance(this.transform.position, to) <= 0.1)
         {
             ani.SetBool("Scared", false);
             transform.rotation = Quaternion.Euler(0f, 0f, 90f);
+            Debug.Log("moved");
             move = false;
+            cirColl.enabled = true;
             atPos1 = !atPos1;
         }
     }
@@ -140,14 +142,17 @@ public class Duck : MonoBehaviour {
         float rot_z = Mathf.Atan2(diff.y, diff.x) * Mathf.Rad2Deg;
         transform.rotation = Quaternion.Euler(0f, 0f, rot_z - 90);
 
-        if (this.transform.position == to)
-        {
+        
+
+        if (Vector3.Distance(this.transform.position, to) <= 0.1)
+        {       
             ani.SetBool("Swimming", false);
-            transform.rotation = Quaternion.Euler(0f, 0f, 90f);
+            transform.localRotation = Quaternion.Euler(0f, 0f, 90f);           
             move = false;
             circle = false;
             pos3.position = pos3Start;
             atPos1 = !atPos1;
+            cirColl.enabled = true;
         }
     }
 }

@@ -27,6 +27,7 @@ TagManager:
   - Frog
   - Flower
   - MamaTurtle
+  - Waterfall
   layers:
   - Default
   - TransparentFX
@@ -75,6 +76,12 @@ TagManager:
     locked: 0
   - name: Lily Pads
     uniqueID: 3395845951
+    locked: 0
+  - name: RockShadow
+    uniqueID: 1650396953
+    locked: 0
+  - name: Rock
+    uniqueID: 1768654801
     locked: 0
   - name: Frog
     uniqueID: 1919258535
