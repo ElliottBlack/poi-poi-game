@@ -18,6 +18,7 @@ public class frogSakura : MonoBehaviour {
         {
             Debug.Log("hit");
             petalCaught = true;
+            coll.transform.SetParent(null);
             petal = coll.GetComponent<Transform>();
             petal.GetComponent<CircleCollider2D>().enabled = false;
             petal.GetComponent<Rigidbody2D>().velocity = Vector2.zero;

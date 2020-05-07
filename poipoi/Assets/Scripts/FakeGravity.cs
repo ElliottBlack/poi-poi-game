@@ -10,13 +10,15 @@ public class FakeGravity : MonoBehaviour {
     public float spawnForce = 500f;
     public Sprite[] petalSprites;
     private SpriteRenderer spriteRen;
+    public float deathRangeUp = 180f;
+    public float deathRangeLow = 60f;
     // Use this for initialization
     void Start () {
         spriteRen = this.GetComponent<SpriteRenderer>();
         spriteRen.sprite = petalSprites[Random.Range(0,4)];
         rb2d = GetComponent<Rigidbody2D>();
         transform.Rotate(0f, 0f, Random.Range(0f, 360f));
-        deathTime = Random.Range(60f, 180f);
+        deathTime = Random.Range(deathRangeLow, deathRangeUp);
         rb2d.AddForce(spawnForce * Random.insideUnitCircle.normalized);
     }
 	

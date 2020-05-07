@@ -28,6 +28,7 @@ TagManager:
   - Flower
   - MamaTurtle
   - Waterfall
+  - FishMouth
   layers:
   - Default
   - TransparentFX
@@ -74,6 +75,12 @@ TagManager:
   - name: petal
     uniqueID: 3817592125
     locked: 0
+  - name: path
+    uniqueID: 2553510041
+    locked: 0
+  - name: pathRocks
+    uniqueID: 2395615469
+    locked: 0
   - name: Lily Pads
     uniqueID: 3395845951
     locked: 0
@@ -86,8 +93,26 @@ TagManager:
   - name: Frog
     uniqueID: 1919258535
     locked: 0
+  - name: Shrub-1
+    uniqueID: 2513003515
+    locked: 0
+  - name: Shrubs
+    uniqueID: 292123215
+    locked: 0
+  - name: Shrub+1
+    uniqueID: 202137795
+    locked: 0
   - name: Trees
     uniqueID: 1995189555
+    locked: 0
+  - name: MidPeach
+    uniqueID: 3966767807
+    locked: 0
+  - name: tree top
+    uniqueID: 2080934523
+    locked: 0
+  - name: peach
+    uniqueID: 2324193273
     locked: 0
   - name: top
     uniqueID: 4139927419

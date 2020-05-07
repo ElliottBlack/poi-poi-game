@@ -2,12 +2,12 @@
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using UnityEngine.UI;
 using WaterRippleForScreens;
 
 public class Fish : MonoBehaviour {
     /// <summary>
     /// handles all things player relate.
-    /// both for player 1 and 2 despite the name.
     /// this is new player1 script, need to replace on prefabs
     /// </summary>
 
@@ -63,6 +63,7 @@ public class Fish : MonoBehaviour {
     private float splashCooldown = 0f;
 
     // keeps track of where the fish is and what stage of dragon development they are at.
+    private int pondNumIndex = 0;
     public bool[] pondNum;
     public float[] pondSpeed;
     public float[] pondCameraSize;
@@ -70,9 +71,38 @@ public class Fish : MonoBehaviour {
     public float[] pondRotSpeeds;
     public float[] pondTrailTimes;
     public float[] pondTrailWidths;
+    public GameObject[] evolveSprites;
     private float camSize;
+    public ParticleSystem[] echos;
+    public float[] collRadii;
+    public float[] collOffsetX;
+
+
+    public AudioClip levelUpFX;
+    public AudioClip gong;
+    private bool fishEvolving = false;
+    private bool evolveEffectStart = false;
+    private bool fadeToEvolve = true;
+    private bool fadeOutEvolve = false;
+    public Image fade;
+    public float fadeTime = 1f;
+    private bool waiting = false;
+    private bool evolveFinished = false;
+    public ParticleSystem evolveEffectRing;
+    public ParticleSystem evolveEffectWhite;
+    public ParticleSystem evolveEffectGold;
+    public ParticleSystem firework;
+    private bool fadeBack = false;
+    public GameObject petalCounter;
+    private bool waitOnFish = false;
+    private bool changeSprites = false;
+    public GameObject transformationPos;
+
+    public AudioSource music;
 
     public GameObject triggerBubble;
+    public GameObject mouthObject;
+
     void OnCollisionEnter2D(Collision2D coll)
     {
         if (coll.gameObject.tag == "PowerUp")
@@ -88,25 +118,19 @@ public class Fish : MonoBehaviour {
         {
             
             coll.enabled = false;
+            camSize = 50f;
 
-            for(int i = 0; i < pondNum.Length-1; i++)
-            {
-                if (pondNum[i])
-                {
-                    trail.material = pondDragonMaterials[i + 1];
-                    rotSpeed = pondRotSpeeds[i + 1];
-                    trail.time = pondTrailTimes[i + 1];
-                    trail.startWidth = pondTrailWidths[i + 1];
-
-
-                    speed = pondSpeed[i+1];
-                    pondNum[i] = false;
-                    pondNum[i+1] = true;
-                    camSize = pondCameraSize[i+1];
-                    lm.PowerPetalCollected(false);
-                    break;
-                }
-            }          
+            //need to pause player. and play trasnform scene.
+            canMove = false;
+            speed = 0;
+            // trail.time = 10000000000000f;
+            //FishEvolve();
+            //fadeToEvolve = true;
+            fishEvolving = true;
+            audioSource.PlayOneShot(levelUpFX, 1F);
+            evolveSprites[pondNumIndex].SetActive(true);
+            petalCounter.SetActive(false);
+            music.Pause();
         }
 
 
@@ -157,14 +181,28 @@ public class Fish : MonoBehaviour {
         for (int i = 0; i < pondNum.Length; i++)
         {
             if (pondNum[i])
-            { 
+            {
+                pondNumIndex = i;
                 speed = pondSpeed[i];
                 camSize = pondCameraSize[i];
                 trail.material = pondDragonMaterials[i];
                 rotSpeed = pondRotSpeeds[i];
                 trail.time = pondTrailTimes[i];
                 trail.startWidth = pondTrailWidths[i];
-
+                if (i == pondNum.Length - 1)
+                {
+                    //dragon therefore turn off collider and change sorting layer
+                    cirColl.enabled = false;
+                    //because sorting layer change dragon is not hidden in waterfall.
+                    //maybe just hard code something. like start dragon moving early and play cutscene
+                    //turn offf controls nd so on.
+                    trail.sortingLayerName = "top";
+                }
+                else
+                {
+                    cirColl.radius = collRadii[i];
+                    cirColl.offset = new Vector2(collOffsetX[i],0f);
+                }
             }
         }
 
@@ -183,11 +221,9 @@ public class Fish : MonoBehaviour {
         CameraZoom();
         Movement();
 
-        if (Input.GetKey(KeyCode.Space) && !splashed)
+        if (Input.GetKey(KeyCode.Space) && !splashed && canMove)
         {
             Splash();
-            Instantiate(triggerBubble, parSys.transform.position, this.transform.rotation);
-            splashed = true;
         }
 
         if(splashed)
@@ -198,6 +234,13 @@ public class Fish : MonoBehaviour {
                 splashed = false;
                 splashCooldown = 0f;
             }
+        }
+
+
+
+        if(fishEvolving)
+        {
+            FishEvolve();         
         }
 
     } 
@@ -255,11 +298,26 @@ public class Fish : MonoBehaviour {
 
     void Splash()
     {
-        //transform.Rotate(Vector3.forward * Random.Range(-2f, 2f) * rotSpeed);
-        parSys.Play();
+        for (int i = 0; i < pondNum.Length; i++)
+        {
+            if (pondNum[i])
+            {
+                if (mouthObject != null)
+                {
+                    mouthObject.transform.SetParent(null);
+                    mouthObject.GetComponent<Rigidbody2D>().isKinematic = false;
+                    mouthObject.GetComponent<CircleCollider2D>().isTrigger = false;
+                    mouthObject = null;
+                }
+                echos[i].Play();
+                GameObject bub = Instantiate(triggerBubble, echos[i].transform.position, this.transform.rotation);
+                bub.GetComponent<Bubble>().index = i;
+                splashed = true;             
+            }
+        }
+
+
         audioSource.PlayOneShot(rippleFX, 0.7F);
-        // ripple.SetNewRipplePosition(new Vector2(cam.WorldToScreenPoint(this.transform.position).x, cam.WorldToScreenPoint(this.transform.position).y));
-        // ripple.SetNewRipplePosition(new Vector2(0f, 0f));
     }
 
     void CameraZoom()
@@ -268,6 +326,166 @@ public class Fish : MonoBehaviour {
         {
             cam.orthographicSize += Time.deltaTime * 10f;
         }
+    }
+
+    public void FishEvolve()
+    {
+
+        // whenver startcoroutin wait is ran change variable waiting to true, once wait is complete it will change to false;
+        // then move to next section
+
+        // start evolving
+        if (fadeToEvolve)
+        {
+            // fade screen to white
+            if (fade.color.a < 1.0f)
+            {
+                fade.color = new Color(fade.color.r, fade.color.g, fade.color.b, fade.color.a + (Time.deltaTime / fadeTime));
+            }
+            //once full white screen move camera to evolve location and change varavles
+            else if (fade.color.a >= 1.0f && !waiting)
+            {
+                //Debug.Log(cam.orthographicSize);
+                cam.orthographicSize = 50f;
+                cam.transform.position = new Vector3(5000f, 0f, -100f);
+                cam.GetComponent<CameraFollow>().enabled = false;
+                //cam.GetComponent<CameraFollow>().target = transformationPos;
+                StartCoroutine(Wait(1));
+                waiting = true;
+                fadeToEvolve = false;
+                fadeOutEvolve = true;
+            }
+        }
+        // fade screen back
+        else if (fadeOutEvolve)
+        {
+            if (!waiting && !waitOnFish)
+            {
+                fade.color = new Color(fade.color.r, fade.color.g, fade.color.b, fade.color.a - (Time.deltaTime / fadeTime));
+                // once screen visible again wait 5 secs then start evolve animations
+                if (fade.color.a <= 0f)
+                {
+                    StartCoroutine(Wait(5));
+                    waiting = true;
+                    waitOnFish = true;
+                }
+            }
+            else if(!waiting && waitOnFish)
+            {
+                fadeOutEvolve = false;
+                evolveEffectStart = true;
+                waiting = true;
+                StartCoroutine(Wait(8));
+                evolveEffectRing.Play();               
+            }
+
+        }
+        else if (evolveEffectStart)
+        {
+            if (!waiting && !evolveFinished)
+            {
+               
+                if (!changeSprites && !waiting)
+                {
+                    evolveEffectWhite.Play();
+                    waiting = true;
+                    StartCoroutine(Wait(2));
+                    changeSprites = true;
+                }
+                else if (changeSprites && !waiting)
+                {
+                    evolveSprites[pondNumIndex].SetActive(false);
+                    evolveSprites[pondNumIndex + 1].SetActive(true);
+                    evolveFinished = true;
+                    evolveEffectGold.Play();
+                    audioSource.PlayOneShot(gong, 1F);
+                    waiting = true;
+                    StartCoroutine(Wait(5));
+                }
+            }
+            else if (evolveFinished && !waiting)
+            {
+
+                if (fade.color.a < 1.0f && !fadeBack)
+                {
+                    fade.color = new Color(fade.color.r, fade.color.g, fade.color.b, fade.color.a + (Time.deltaTime / (fadeTime * 3)));
+                    if (fade.color.a >= 1.0f)
+                    {
+                        for (int i = 0; i < pondNum.Length - 1; i++)
+                        {
+                            if (pondNum[i])
+                            {
+                                if(i + 1 == pondNum.Length - 1)
+                                {
+                                    //dragon therefore turn off collider and change sorting layer
+                                    cirColl.enabled = false;
+                                    //because sorting layer change dragon is not hidden in waterfall.
+                                    //maybe just hard code something. like start dragon moving early and play cutscene
+                                    //turn offf controls nd so on.
+                                    trail.sortingLayerName = "top";
+                                }
+                                else
+                                {
+                                    cirColl.radius = collRadii[i+1];
+                                    cirColl.offset = new Vector2(collOffsetX[i+1], 0f);
+                                }
+
+                                trail.material = pondDragonMaterials[i + 1];
+                                rotSpeed = pondRotSpeeds[i + 1];
+                                trail.time = pondTrailTimes[i + 1];
+                                trail.startWidth = pondTrailWidths[i + 1];
+
+                                music.Play();
+                                speed = pondSpeed[i + 1];
+                                pondNum[i] = false;
+                                pondNum[i + 1] = true;
+                                cam.orthographicSize = pondCameraSize[i];
+                                camSize = pondCameraSize[i + 1];
+                                lm.PowerPetalCollected(false);
+                                pondNumIndex += 1;
+                                break;
+                            }
+                        }
+                        petalCounter.SetActive(true);
+
+                        evolveSprites[pondNumIndex].SetActive(false);
+                        canMove = true;
+                        cam.GetComponent<CameraFollow>().enabled = true;
+                        //cam.GetComponent<CameraFollow>().target = this.gameObject;
+                        cam.transform.position = new Vector3(this.transform.position.x, this.transform.position.y, -100f);
+                        fadeBack = true;
+
+                        //waiting = true;
+                        //StartCoroutine(Wait(5));
+                    }
+                }
+                else
+                {
+                    fade.color = new Color(fade.color.r, fade.color.g, fade.color.b, fade.color.a - (Time.deltaTime / fadeTime * 3));
+                    // once screen visible again wait 5 secs then start evolve animations
+                    if (fade.color.a <= 0f)
+                    {
+                        evolveEffectStart = false;
+                        fadeBack = false;
+                    }
+                }
+            }
+        }
+        else
+        {
+            fishEvolving = false;
+            fadeToEvolve = true;
+            evolveFinished = false;
+            waitOnFish = false;
+            changeSprites = false;
+        }
+        
+    }
+
+    IEnumerator Wait(float secs)
+    {
+        yield return new WaitForSeconds(secs);
+        waiting = false;
     }
 
 }

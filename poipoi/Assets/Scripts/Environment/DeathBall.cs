@@ -45,7 +45,7 @@ public class DeathBall : MonoBehaviour {
     {
         if (coll.gameObject.tag == "Peach" && hungryFrog)
         {
-            frogCollider.enabled = true;
+            //frogCollider.enabled = true;
             ani.Play("FrogJump", 0, 0);
             rb2d.AddForce(transform.up * thrustSpeed * 2f);
             eatPeach = true;

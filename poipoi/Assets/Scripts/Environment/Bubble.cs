@@ -5,9 +5,10 @@ using UnityEngine;
 public class Bubble : MonoBehaviour {
 
     private CircleCollider2D trig;
-    public float speed = 1f;
+    public float[] speed;
     private float secs = 0f;
-    public float aliveSecs = 3;
+    public float[] aliveSecs;
+    public int index = 0;
 
     // Use this for initialization
     void Start () {
@@ -16,9 +17,9 @@ public class Bubble : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-        trig.radius += Time.deltaTime * speed;
+        trig.radius += Time.deltaTime * speed[index];
         secs += Time.deltaTime;
-        if (secs >= aliveSecs)
+        if (secs >= aliveSecs[index])
         {
             Destroy(this.gameObject);
         }

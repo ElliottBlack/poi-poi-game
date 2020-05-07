@@ -88,5 +88,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8f0cc2be9b7714c4384460fad5aeedff, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 28
-  aliveSecs: 2
+  speed:
+  - 10
+  - 20
+  - 26
+  - 26
+  - 26
+  aliveSecs:
+  - 1.2
+  - 1.2
+  - 1.5
+  - 2
+  - 2
+  index: 0

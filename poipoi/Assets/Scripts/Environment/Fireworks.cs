@@ -16,6 +16,12 @@ public class Fireworks : MonoBehaviour {
     public AudioClip rippleFX;
     AudioSource audioSource;
 
+    public bool move = false;
+    public Vector3 newPositionAdd;
+    private float secs = 0f;
+    public float moveSecs = 2f;
+    private CircleCollider2D cirColl;
+    public bool randRot = true;
     void OnDestroy()
     {
         Instantiate(dieEffectsPrefab, this.transform.position, this.transform.rotation);
@@ -41,14 +47,17 @@ public class Fireworks : MonoBehaviour {
         if (coll.gameObject.tag == "Bubble")
         {
             audioSource.PlayOneShot(rippleFX, 0.7F);
-            Debug.Log("bubble hit");
         }
     }
 
     // Use this for initialization
     void Start () {
+        cirColl = this.GetComponent<CircleCollider2D>();
         audioSource = GetComponent<AudioSource>();
-        transform.Rotate(0f, 0f, Random.Range(0f, 360f));
+        if(randRot)
+        {
+            transform.Rotate(0f, 0f, Random.Range(0f, 360f));
+        }
         //rig = this.GetComponent<Rigidbody2D>();
         //rig.AddForce(new Vector3(0, -speed, 0));
         lm = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<LevelManager>();
@@ -56,6 +65,17 @@ public class Fireworks : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		
+	
+        if(move)
+        {
+            transform.Translate(newPositionAdd * speed * Time.deltaTime);
+            secs += Time.deltaTime;
+            if(secs > moveSecs)
+            {
+                move = false;
+                cirColl.enabled = true;
+            }
+        }
+        
 	}
 }

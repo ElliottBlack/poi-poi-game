@@ -12,6 +12,11 @@ public class Turtle : MonoBehaviour {
     public bool spawnPetal = false;
     public GameObject petal;
     public Transform head;
+    public bool slide = false;
+    private float secs = 0f;
+    public float waitSecs = 3f;
+    private bool waited = false;
+    private bool move = true;
 
     public float petalx = 10f;
     public float petaly = 0f;
@@ -21,6 +26,12 @@ public class Turtle : MonoBehaviour {
         if (coll.gameObject.tag == "Bubble" && inShell)
         {
             found = true;
+        }
+        if (coll.gameObject.tag == "Wall" && !inShell)
+        {
+            GetComponent<Animator>().SetBool("GoIn", true);
+            rb2d.velocity = Vector3.zero;
+            move = false;
         }
 
     }
@@ -47,20 +58,40 @@ public class Turtle : MonoBehaviour {
                 }
             }
         }
-        else
+        else if (move)
         {
-            Movement();
+            if(!waited)
+            {
+                secs += Time.deltaTime;
+                if(secs >= waitSecs)
+                {
+                    waited = true;
+                    
+                }
+            }
+            else
+            {
+                Movement();
+            }
         }
-
 	}
 
     void Movement ()
     {
-        transform.Rotate(Vector3.forward * rotSpeed);
+        //transform.Rotate(Vector3.forward * rotSpeed);
         //Use the two store floats to create a new Vector2 variable movement.
         Vector3 movement = transform.right;
 
         //Call the AddForce function of our Rigidbody2D rb2d supplying movement multiplied by speed to move our player.
-        rb2d.AddForce(movement * speed);
+        if (slide)
+        {
+            rb2d.AddForce(movement * speed *300f);
+            slide = false;
+        }
+        else
+        {
+            rb2d.AddForce(movement * speed);
+        }
+
     }
 }
