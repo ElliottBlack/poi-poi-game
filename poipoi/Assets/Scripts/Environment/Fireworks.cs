@@ -22,6 +22,11 @@ public class Fireworks : MonoBehaviour {
     public float moveSecs = 2f;
     private CircleCollider2D cirColl;
     public bool randRot = true;
+
+    public GameObject player;
+    public bool magnet = false;
+    private float magnetRange = 12f;
+    private float magnetPower = 7f;
     void OnDestroy()
     {
         Instantiate(dieEffectsPrefab, this.transform.position, this.transform.rotation);
@@ -52,6 +57,7 @@ public class Fireworks : MonoBehaviour {
 
     // Use this for initialization
     void Start () {
+        player = GameObject.FindWithTag("Player");
         cirColl = this.GetComponent<CircleCollider2D>();
         audioSource = GetComponent<AudioSource>();
         if(randRot)
@@ -73,9 +79,28 @@ public class Fireworks : MonoBehaviour {
             if(secs > moveSecs)
             {
                 move = false;
+                magnet = true;
                 cirColl.enabled = true;
             }
         }
         
+        if(magnet)
+        {
+            if(Vector3.Distance(this.transform.position, player.transform.position) <= magnetRange)
+            {
+                Attract();
+            }
+
+        }
+
 	}
+
+    void Attract()
+    {
+        float step = magnetPower * Time.deltaTime;
+
+        // move sprite towards the target location
+        transform.position = Vector2.MoveTowards(transform.position, player.transform.position, step);
+    
+    }
 }

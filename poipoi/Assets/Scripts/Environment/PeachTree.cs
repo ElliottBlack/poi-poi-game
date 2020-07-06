@@ -22,8 +22,8 @@ public class PeachTree : MonoBehaviour {
             ani.Play("PeachShake", 0, 0);
             peachRigidbody.AddForce(peachSpeed);
             peachSpriteRenderer.sortingLayerName = "petal";
-            this.GetComponent<AudioSource>().PlayOneShot(crow, lm.soundVolume);
-            this.GetComponent<AudioSource>().PlayOneShot(water, lm.soundVolume);
+            this.GetComponent<AudioSource>().PlayOneShot(crow, lm.getSoundVolume());
+            this.GetComponent<AudioSource>().PlayOneShot(water, lm.getSoundVolume());
         }
     }
     void OnCollisionEnter2D(Collision2D coll)

@@ -5,6 +5,7 @@ using UnityEngine;
 public class FakeGravity : MonoBehaviour {
     public Rigidbody2D rb2d;
     private float secs = 0f;
+    public float gravityStrength = 20f;
     private float deathTime = 0f;
     public Vector3 gravityOrigin;
     public float spawnForce = 500f;
@@ -19,6 +20,7 @@ public class FakeGravity : MonoBehaviour {
         rb2d = GetComponent<Rigidbody2D>();
         transform.Rotate(0f, 0f, Random.Range(0f, 360f));
         deathTime = Random.Range(deathRangeLow, deathRangeUp);
+
         rb2d.AddForce(spawnForce * Random.insideUnitCircle.normalized);
     }
 	
@@ -32,7 +34,7 @@ public class FakeGravity : MonoBehaviour {
         toGravityOriginFromObject.Normalize();
 
         //Multiply vector so that the magnitude is equal to the force we wish to apply.
-        float accelerationDueToGravity = 20f;
+        float accelerationDueToGravity = gravityStrength;
         toGravityOriginFromObject *= accelerationDueToGravity * rb2d.mass * Time.deltaTime;
 
         //Apply our acceleration.

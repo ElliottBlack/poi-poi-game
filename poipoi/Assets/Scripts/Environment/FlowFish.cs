@@ -13,6 +13,7 @@ public class FlowFish : MonoBehaviour {
     private Quaternion to;
 
     public bool follower = false;
+    public bool flowerMovement = false;
     public FlowFish leader;
 
     public float delaySecs = 0.5f;
@@ -33,7 +34,23 @@ public class FlowFish : MonoBehaviour {
 
     public ParticleSystem flowEcho;
 
+    private AudioSource aud;
+    public AudioClip fishSound;
+    public LevelManager lm;
+
     private float secs = 0f;
+    private float bubbleSecs = 0f;
+    private bool bubbling = false;
+
+    //flower movement polar to catersin variavles
+    public float radius = 10f;
+    public float flowerSpeed = 10f;
+    private float radians;
+    private float t = 0f;
+    private float r;
+    private float x;
+    private float y;
+
     private void OnTriggerEnter2D(Collider2D coll)
     {
         if (coll.gameObject.tag == "Wall" && !follower)
@@ -41,14 +58,19 @@ public class FlowFish : MonoBehaviour {
             OriginVec = StartVec - transform.position;
             CenterMove = true;
         }
-        if (coll.gameObject.tag == "Bubble")
+        if (coll.gameObject.tag == "Bubble" && !bubbling)
         {
+            aud.PlayOneShot(fishSound, lm.getSoundVolume());
+            var main = flowEcho.main;
+            main.startColor = new Color(Random.Range(0f, 1f), Random.Range(0f, 1f), Random.Range(0f, 1f), 1);
             flowEcho.Play();
+            bubbling = true;
         }
     }
     // Use this for initialization
     void Start()
     {
+        aud = GetComponent<AudioSource>();
         StartVec = this.transform.position;
         speed = Random.Range(8f, 9f);
         if (!follower)
@@ -69,40 +91,44 @@ public class FlowFish : MonoBehaviour {
     // Update is called once per frame
     void Update()
     {
-     
+
     }
 
     void FixedUpdate()
     {
-        Movement();
-        secs += Time.deltaTime;
-        if (secs > turnTime)
+        if(bubbling)
         {
-
-            if (follower)
+            bubbleSecs += Time.deltaTime;
+            if(bubbleSecs >= 1f)
             {
-                followX = Random.Range(-followRange, followRange);
-                followY = Random.Range(-followRange, followRange);
-            }
-            else
-            {
-                from = this.transform.rotation;
-                to = Quaternion.Euler(0f, 0f, Random.Range(0f, 360f));
-                rotSpeed = Random.Range(-1f, 1f);
-            }
-
-            turnTime = Random.Range(5f, 10f);
-            secs = 0f;
-        }
-        if (changeFollow)
-        {
-            changeSecs += Time.deltaTime;
-            if (changeSecs >= changeTime)
-            {
-                changeSecs = 0f;
-                follower = !follower;
+                bubbling = false;
+                bubbleSecs = 0f;
             }
         }
+        if(flowerMovement)
+        {
+            FlowerMovement();
+        }
+        else
+        {
+            Movement();
+            secs += Time.deltaTime;
+        }
+
+        
+ 
+    }
+
+    void FlowerMovement()
+    {
+        t += Time.deltaTime * flowerSpeed;
+        radians = t * (Mathf.PI / 180);
+        r = radius * Mathf.Sin((8f/5f) * radians);
+        x = r * Mathf.Cos(radians);
+        y = r * Mathf.Sin(radians);
+
+        this.transform.position = new Vector3(x + StartVec.x, y + StartVec.y, 0f);
+
     }
 
     void Movement()
@@ -148,5 +174,34 @@ public class FlowFish : MonoBehaviour {
 
         //Call the AddForce function of our Rigidbody2D rb2d supplying movement multiplied by speed to move our player.
         rb2d.AddForce(movement * speed);
+
+        //turn stuff was in update
+        if (secs > turnTime)
+        {
+
+            if (follower)
+            {
+                followX = Random.Range(-followRange, followRange);
+                followY = Random.Range(-followRange, followRange);
+            }
+            else
+            {
+                from = this.transform.rotation;
+                to = Quaternion.Euler(0f, 0f, Random.Range(0f, 360f));
+                rotSpeed = Random.Range(-1f, 1f);
+            }
+
+            turnTime = Random.Range(5f, 10f);
+            secs = 0f;
+        }
+        if (changeFollow)
+        {
+            changeSecs += Time.deltaTime;
+            if (changeSecs >= changeTime)
+            {
+                changeSecs = 0f;
+                follower = !follower;
+            }
+        }
     }
 }

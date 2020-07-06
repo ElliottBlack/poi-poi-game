@@ -8,6 +8,7 @@ public class BellsManager : MonoBehaviour {
     private int bellsGlowing = 0;
     public GameObject sakura;
     private bool sakuraSpawned = false;
+    public bool allBellsGlowing = false;
 	// Use this for initialization
 	void Start () {
 		
@@ -23,6 +24,7 @@ public class BellsManager : MonoBehaviour {
         bellsGlowing += 1;
         if (bellsGlowing >= numBells && !sakuraSpawned)
         {
+            allBellsGlowing = true;
             sakuraSpawned = true;
             Instantiate(sakura, this.transform.position, this.transform.rotation);
         }
@@ -31,6 +33,11 @@ public class BellsManager : MonoBehaviour {
     public void bellStoppedGlowing()
     {
         bellsGlowing -= 1;
+    }
+
+    public int getBellsGlowing()
+    {
+        return bellsGlowing;
     }
 
 }

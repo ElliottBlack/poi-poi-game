@@ -15,6 +15,14 @@ public class LilyPad : MonoBehaviour {
     private float a;
     private float b;
 
+    public bool lotusPad = false;
+    private ParticleSystem rip;
+
+    private AudioSource aud;
+    public AudioClip[] lilySounds;
+    private int soundIndex = 0;
+    public LevelManager lm;
+
 
     // the instantiated particle effect needs to destroy itself.
     // also thesize  of the ripple needs to be dependent on the size of the lily.
@@ -24,12 +32,24 @@ public class LilyPad : MonoBehaviour {
         if (coll.gameObject.tag == "FishMouth")
         {
             move = true;
-            Instantiate(lilyRipple,this.transform.position, lilyRipple.transform.rotation);
+            rip = Instantiate(lilyRipple,this.transform.position, lilyRipple.transform.rotation);
+            if(lotusPad)
+            {
+                rip.startLifetime = (1.5f * this.transform.localScale.x * 2f) / 7f;
+            }
+            else
+            {
+                rip.startLifetime = (1.5f * this.transform.localScale.x) / 7f;
+            }
+
+            soundIndex = Random.Range(0, lilySounds.Length);
+            aud.PlayOneShot(lilySounds[soundIndex], lm.getSoundVolume());
         }
     }
 
     // Use this for initialization
     void Start () {
+        aud = GetComponent<AudioSource>();
         a = this.transform.position.x;
         b = this.transform.position.y;
 	}
@@ -48,8 +68,6 @@ public class LilyPad : MonoBehaviour {
         x = Mathf.Cos(angle) * radius + a - radius;
         y = Mathf.Sin(angle) * radius + b;
         this.transform.position = new Vector3(x, y, 0f);
-        Debug.Log(angle);
-        Debug.Log(Mathf.Sin(angle));
         if ((angle * 180)/ Mathf.PI >= 360f)
         {
             move = false;

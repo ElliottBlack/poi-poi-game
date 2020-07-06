@@ -29,6 +29,7 @@ TagManager:
   - MamaTurtle
   - Waterfall
   - FishMouth
+  - PlayerMouth
   layers:
   - Default
   - TransparentFX

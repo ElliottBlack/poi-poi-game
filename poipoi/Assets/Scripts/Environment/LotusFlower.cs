@@ -15,7 +15,11 @@ public class LotusFlower : MonoBehaviour {
     private float waitSecs = 1f;
 
     public float moveSpeed = 1f;
-    public float moveSecs = 5f; 
+    public float moveSecs = 5f;
+
+    private AudioSource aud;
+    public AudioClip flowerSound;
+    public LevelManager lm;
 
     private void OnTriggerEnter2D(Collider2D coll)
     {
@@ -23,6 +27,7 @@ public class LotusFlower : MonoBehaviour {
         if (coll.gameObject.tag == "Bubble" && !opened)
         {
             ani.SetBool("open", true);
+            aud.PlayOneShot(flowerSound, lm.getSoundVolume());
             opened = true;
             opening = true;
         }
@@ -31,6 +36,8 @@ public class LotusFlower : MonoBehaviour {
     // Use this for initialization
     void Start () {
         ani = GetComponent<Animator>();
+        aud = this.GetComponent<AudioSource>();
+
     }
 	
 	// Update is called once per frame

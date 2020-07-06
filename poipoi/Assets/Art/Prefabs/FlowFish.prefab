@@ -239,6 +239,8 @@ MonoBehaviour:
   changeFollow: 0
   changeTime: 10
   flowEcho: {fileID: 198181339193661654}
+  fishSound: {fileID: 0}
+  lm: {fileID: 0}
 --- !u!198 &198181339193661654
 ParticleSystem:
   m_ObjectHideFlags: 1
@@ -1517,7 +1519,7 @@ ParticleSystem:
         m_RotationOrder: 4
     separateAxes: 0
   ColorModule:
-    enabled: 1
+    enabled: 0
     gradient:
       serializedVersion: 2
       minMaxState: 1

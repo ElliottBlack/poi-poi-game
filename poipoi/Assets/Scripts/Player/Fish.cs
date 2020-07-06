@@ -98,6 +98,8 @@ public class Fish : MonoBehaviour {
     private bool changeSprites = false;
     public GameObject transformationPos;
 
+    private float stoppedSecs = 0f;
+    private float heldStoppedSecs = 0f;
     public AudioSource music;
 
     public GameObject triggerBubble;
@@ -133,12 +135,14 @@ public class Fish : MonoBehaviour {
             music.Pause();
         }
 
-
         if (coll.gameObject.tag == "Petal")
+        {
+            //audioSource.PlayOneShot(impact, 0.7F);
+        }
+        if (coll.gameObject.tag == "PowerUp")
         {
             audioSource.PlayOneShot(impact, 0.7F);
         }
-
 
     }
 
@@ -285,7 +289,13 @@ public class Fish : MonoBehaviour {
             moveHorizontal = 0f;
         }
 
-        moveVertical = 1f;// used for constant forward motion 
+        if (lm.powerPetalsSum == 0)
+        {
+            moveHorizontal = 0f;
+        }
+
+
+        //moveVertical = 1f;// used for constant forward motion 
 
         transform.Rotate(Vector3.forward * -moveHorizontal * rotSpeed);
 
@@ -307,6 +317,7 @@ public class Fish : MonoBehaviour {
                     mouthObject.transform.SetParent(null);
                     mouthObject.GetComponent<Rigidbody2D>().isKinematic = false;
                     mouthObject.GetComponent<CircleCollider2D>().isTrigger = false;
+                    mouthObject.GetComponent<SpriteRenderer>().sortingLayerName = "RockShadow";
                     mouthObject = null;
                 }
                 echos[i].Play();

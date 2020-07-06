@@ -9,6 +9,8 @@ public class LevelManager : MonoBehaviour {
     public CharaterSelecter charSelect;
     public GameManager gm;
     public GameObject pausePanel;
+    public Slider soundSlider;
+    public Slider musicSlider;
     public TextMeshProUGUI displayText;
 
     //need to keep track of what quest is what index
@@ -23,8 +25,8 @@ public class LevelManager : MonoBehaviour {
 
     public Sprite[] fishSprites;
     public Material[] fishMaterials;
-    public float soundVolume = 1f;
-    public float musicVolume = 1f;
+    private float soundVolume = 1f;
+    private float musicVolume = 1f;
 
     public TextMeshProUGUI sakuraCounter;
 
@@ -48,12 +50,15 @@ public class LevelManager : MonoBehaviour {
 
     public int powerPetalsSum = 0;
 
+
     // Use this for initialization
     void Start () {
 
         //gm = GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>();
-        displayText.text = "Press Esc for Menu";
-        StartCoroutine(FadeTextToFullAlpha(1f, displayText));
+
+        //start of game drisplay message on how to puase probs dont need
+        //displayText.text = "Press Esc for Menu";
+        //StartCoroutine(FadeTextToFullAlpha(1f, displayText));
 
     }
 	
@@ -257,17 +262,46 @@ public class LevelManager : MonoBehaviour {
     public void Pause()
     {
         paused = true;
-
+        soundSlider.value = soundVolume;
+        musicSlider.value = musicVolume;
+        pausePanel.SetActive(true);
         Time.timeScale = 0;
 
     }
     public void Unpause()
     {
         paused = false;
-
+        soundVolume = soundSlider.value;
+        musicVolume = musicSlider.value;
+        pausePanel.SetActive(false);
         Time.timeScale = 1;
     }
 
+    public void popupMessage(string s)
+    {
+        displayText.text = s;
+        StartCoroutine(FadeTextToFullAlpha(1f, displayText));
+    }
 
+    public void setSoundVolume(float x)
+    {
+        soundVolume = x;
+    }
+
+    public float getSoundVolume()
+    {
+        return soundVolume;
+    }
+
+
+    public void setMusicVolume(float x)
+    {
+        musicVolume = x;
+    }
+
+    public float getMusicVolume()
+    {
+        return musicVolume;
+    }
 
 }

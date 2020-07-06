@@ -12,11 +12,12 @@ public class frogSakura : MonoBehaviour {
     public GameObject powerSakura;
     private bool petalEaten = false;
 
+    public bool peachEater = false;
+
     private void OnTriggerEnter2D(Collider2D coll)
     {
-        if (coll.gameObject.tag == "Petal" && !petalCaught) 
+        if (coll.gameObject.tag == "Petal" && !petalCaught && !peachEater) 
         {
-            Debug.Log("hit");
             petalCaught = true;
             coll.transform.SetParent(null);
             petal = coll.GetComponent<Transform>();
@@ -24,6 +25,16 @@ public class frogSakura : MonoBehaviour {
             petal.GetComponent<Rigidbody2D>().velocity = Vector2.zero;
             petal.GetComponent<FakeGravity>().enabled = false;
         }
+        if (coll.gameObject.tag == "Peach" && !petalCaught && peachEater)
+        {
+            petalCaught = true;
+            coll.transform.SetParent(null);
+            petal = coll.GetComponent<Transform>();
+            petal.GetComponent<CircleCollider2D>().enabled = false;
+            petal.GetComponent<Rigidbody2D>().velocity = Vector2.zero;
+            petal.GetComponent<FakeGravity>().enabled = false;
+        }
+
     }
 
     // Use this for initialization

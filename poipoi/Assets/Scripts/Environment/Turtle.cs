@@ -21,10 +21,15 @@ public class Turtle : MonoBehaviour {
     public float petalx = 10f;
     public float petaly = 0f;
 
+    private AudioSource aud;
+    public AudioClip turtleYo;
+    public LevelManager lm;
+
     private void OnTriggerEnter2D(Collider2D coll)
     {
         if (coll.gameObject.tag == "Bubble" && inShell)
         {
+            aud.PlayOneShot(turtleYo, lm.getSoundVolume());
             found = true;
         }
         if (coll.gameObject.tag == "Wall" && !inShell)
@@ -38,6 +43,7 @@ public class Turtle : MonoBehaviour {
 
     // Use this for initialization
     void Start () {
+        aud = GetComponent<AudioSource>();
         rb2d = GetComponent<Rigidbody2D>();
     }
 	
